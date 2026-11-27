@@ -274,4 +274,31 @@ export const EXTRA_TOOLS: Tool[] = [
       ],
     },
   },
+  {
+    slug: "currency-converter-nepal",
+    title: "Currency Converter Nepal — NRB Rates for QAR, AED, SAR, MYR, KRW, USD",
+    h1: "Currency Converter Nepal — Today's Nepal Rastra Bank Rates",
+    h1Np: "विदेशी मुद्रा रूपान्तरण",
+    shortTitle: "Currency Converter (NRB)",
+    description: "Convert Qatari riyal, UAE dirham, Saudi riyal, Malaysian ringgit, Korean won, US dollar and 20+ other currencies to Nepali rupees at today's official Nepal Rastra Bank rate, updated every hour.",
+    category: "finance-tax-currency",
+    keywords: ["currency converter nepal", "qatar riyal to npr", "dirham to npr", "saudi riyal to nepali rupees", "ringgit to npr", "korean won to npr", "nrb exchange rate today", "विदेशी विनिमय दर"],
+    componentKey: "currency",
+    renderAs: "tool",
+    lastUpdated: D,
+    sourceNote: "Rates: Nepal Rastra Bank daily foreign exchange rates, fetched automatically every hour.",
+    related: ["usd-to-npr", "number-to-nepali-words", "lakh-crore-converter"],
+    content: {
+      intro: [
+        "Sending money home from Qatar, the UAE, Saudi Arabia, Malaysia or Korea? This converter uses the **official Nepal Rastra Bank (NRB) rate** for every currency NRB publishes, refreshed every hour.",
+        "When you change foreign money into rupees, banks pay close to the NRB **buying** rate. When you buy foreign currency, they charge close to the **selling** rate. Remittance companies add their own margin and fees, so the amount you receive can be a little lower.",
+      ],
+      steps: ["Choose **Foreign → NPR** or **NPR → Foreign**.", "Pick the **currency**.", "Enter the **amount** and read the result in rupees and in Nepali words.", "Open **See all NRB rates** for the full table."],
+      faqs: [
+        { q: "Why do some currencies show 100 or 10 units?", a: "NRB quotes small-value currencies like the Indian rupee, Japanese yen and Korean won per 100 or 10 units. The converter handles this for you." },
+        { q: "Is this the rate my remittance company gives?", a: "It's the official reference rate. Remittance companies usually pay slightly less and may charge a fee. Compare their quoted rate with this one." },
+        { q: "How often is it updated?", a: "We check NRB every hour. NRB publishes new rates once each working day." },
+      ],
+    },
+  },
 ];

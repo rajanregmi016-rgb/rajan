@@ -8,6 +8,7 @@ import { getTool, getCategory, allTools, toolsInCategory } from "@/lib/tools";
 import { categoryMeta } from "@/lib/categoryMeta";
 import { ChevronRight } from "lucide-react";
 import { getForex } from "@/lib/rates";
+import ShareTool from "@/components/ShareTool";
 import { getLiveRates } from "@/lib/server/marketData";
 import { TOOL_COMPONENTS } from "@/components/tools/toolComponents";
 import { faqJsonLd, JsonLd, breadcrumbJsonLd, toolJsonLd } from "@/lib/seo";
@@ -97,6 +98,7 @@ export default async function ToolPage({ params }: Params) {
           {/* The tool itself — always first in content order */}
           <section id="tool" aria-label={`${tool.shortTitle} tool`} className="scroll-mt-24">
             <Comp rates={ratesWithForex} />
+            <ShareTool title={tool.shortTitle} path={`/${tool.slug}`} />
           </section>
 
           <nav aria-label="On this page" className="mt-6 flex flex-wrap gap-2">

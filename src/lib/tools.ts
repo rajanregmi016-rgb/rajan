@@ -14,7 +14,8 @@ export type ToolComponentKey =
   | "gold" | "percentage" | "unit" | "bmi" | "seeGpa"
   | "preeti" | "typing" | "numWords" | "land" | "time"
   | "sip" | "fd" | "simpleInterest" | "discount" | "lakhCrore"
-  | "tola" | "wordCount" | "billSplit" | "fuelCost" | "nebGpa";
+  | "tola" | "wordCount" | "billSplit" | "fuelCost" | "nebGpa"
+  | "currency";
 
 export interface Tool {
   slug: string;

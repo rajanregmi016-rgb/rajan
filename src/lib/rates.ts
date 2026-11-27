@@ -5,6 +5,8 @@ export type Slab = { upto: number; rate: number };
 
 export type RatesData = {
   live?: { gold: boolean; forex: boolean };
+  /** Full NRB table from the latest hourly snapshot (when available). */
+  fx?: { date: string; rates: { iso3: string; name: string; unit: number; buy: number; sell: number }[] };
   gold: {
     fineTola: number;
     tejabiTola: number;

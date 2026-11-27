@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Mail, Send } from "lucide-react";
 import { SITE } from "@/config/site";
 
@@ -22,6 +22,16 @@ export default function ContactForm() {
   const [url, setUrl] = useState("");
   const [message, setMessage] = useState("");
   const [opened, setOpened] = useState(false);
+
+  // Prefill from "Report a problem" links on tool pages (?page=/slug).
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const page = q.get("page");
+    if (page && page.startsWith("/")) {
+      setTopic(TOPIC_OPTIONS[0][0]);
+      setUrl(`${window.location.origin}${page}`);
+    }
+  }, []);
 
   const subject = `[${topic}] ${message.slice(0, 60).replace(/\s+/g, " ")}${message.length > 60 ? "…" : ""}`;
   const body = `${message}\n\n${url ? `Page: ${url}\n` : ""}— ${name || "A visitor"}`;

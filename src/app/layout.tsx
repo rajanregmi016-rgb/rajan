@@ -5,6 +5,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Analytics, { AdSenseHead } from "@/components/Analytics";
+import SearchShortcut from "@/components/SearchShortcut";
 import BackToTop from "@/components/BackToTop";
 import AuthProvider from "@/components/AuthProvider";
 
@@ -30,6 +31,7 @@ const mukta = Mukta({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  appleWebApp: { capable: true, title: "AllNepali", statusBarStyle: "black-translucent" },
   title: {
     default: `${SITE.name} — ${SITE.tagline} | ${SITE.nameNp}`,
     template: `%s | ${SITE.name}`,
@@ -86,6 +88,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Footer />
         </AuthProvider>
         <BackToTop />
+          <SearchShortcut />
         <Analytics />
       </body>
     </html>

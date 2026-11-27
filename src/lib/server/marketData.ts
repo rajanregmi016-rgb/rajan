@@ -205,6 +205,7 @@ export async function getLiveRates(): Promise<RatesData & { live: { gold: boolea
       source: `Nepal Rastra Bank official rate ${snap.forex.date} (buy Rs ${usd.buy} / sell Rs ${usd.sell}, midpoint shown)`,
     };
     out.live.forex = true;
+    (out as RatesData).fx = { date: snap.forex.date, rates: snap.forex.rates };
   }
   return out;
 }

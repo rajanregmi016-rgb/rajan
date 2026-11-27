@@ -13,7 +13,7 @@ import {
 } from "@/components/tools/moreTools";
 import {
   SipTool, FdTool, SimpleInterestTool, DiscountTool, LakhCroreTool,
-  TolaTool, WordCountTool, BillSplitTool, FuelCostTool, NebGpaTool,
+  TolaTool, WordCountTool, BillSplitTool, FuelCostTool, NebGpaTool, CurrencyTool,
 } from "@/components/tools/extraTools";
 import type { RatesData } from "@/lib/rates";
 import type { ToolComponentKey } from "@/lib/tools";
@@ -51,4 +51,5 @@ export const TOOL_COMPONENTS: Record<ToolComponentKey, React.ComponentType<ToolP
   billSplit: BillSplitTool,
   fuelCost: FuelCostTool,
   nebGpa: NebGpaTool,
+  currency: CurrencyTool,
 };

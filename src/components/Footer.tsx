@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { SITE, SITE_URL } from "@/config/site";
 import { Logo } from "@/components/Logo";
 import NewsletterSignup from "@/components/NewsletterSignup";
+import InstallApp from "@/components/InstallApp";
 
 const COLUMNS: Array<{ heading: string; links: Array<{ href: string; label: string }> }> = [
   {
@@ -67,7 +68,10 @@ export default function Footer() {
               Need a tool we don&apos;t have? Suggest it <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
           </div>
-          <NewsletterSignup source="footer" />
+          <div className="flex flex-col items-start gap-4">
+            <NewsletterSignup source="footer" />
+            <InstallApp />
+          </div>
         </div>
 
         <div className="grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr_0.8fr]">

@@ -442,3 +442,65 @@ export function NebGpaTool() {
     </ToolShell>
   );
 }
+
+/* ---------- All-currency converter (NRB) ---------- */
+const POPULAR_FX = ["USD", "QAR", "AED", "SAR", "MYR", "KRW", "JPY", "AUD", "GBP", "EUR", "KWD", "INR", "CAD", "BHD", "OMR"];
+export function CurrencyTool({ rates }: { rates: RatesData }) {
+  const list = useMemo(() => {
+    const all = rates.fx?.rates ?? [{ iso3: "USD", name: "U.S. Dollar", unit: 1, buy: rates.forex.fallbackUsdNpr, sell: rates.forex.fallbackUsdNpr }];
+    const rank = (c: string) => { const i = POPULAR_FX.indexOf(c); return i < 0 ? 99 : i; };
+    return [...all].sort((a, b) => rank(a.iso3) - rank(b.iso3) || a.iso3.localeCompare(b.iso3));
+  }, [rates]);
+  const [code, setCode] = useState("QAR");
+  const [amount, setAmount] = useState("1000");
+  const [dir, setDir] = useState<"in" | "out">("in");
+  const cur = list.find((c) => c.iso3 === code) ?? list[0];
+  const n = Number(amount);
+  const perUnitBuy = cur.buy / cur.unit, perUnitSell = cur.sell / cur.unit;
+  const result = Number.isFinite(n) && n >= 0 ? (dir === "in" ? n * perUnitBuy : n / perUnitSell) : null;
+  return (
+    <ToolShell>
+      <div className="flex gap-2">
+        <button className={toggle(dir === "in")} onClick={() => setDir("in")} aria-pressed={dir === "in"}>Foreign → रु NPR</button>
+        <button className={toggle(dir === "out")} onClick={() => setDir("out")} aria-pressed={dir === "out"}>रु NPR → Foreign</button>
+      </div>
+      <div className="mt-3"><Row>
+        <Field label={dir === "in" ? `Amount in ${cur.iso3}` : "Amount in Nepali rupees"}><Num value={amount} onChange={setAmount} min={0} /></Field>
+        <Field label="Currency">
+          <select className="input" value={cur.iso3} onChange={(e) => setCode(e.target.value)}>
+            {list.map((c) => <option key={c.iso3} value={c.iso3}>{c.iso3} — {c.name}</option>)}
+          </select>
+        </Field>
+      </Row></div>
+      {result !== null && (
+        <ResultCard items={[
+          { label: dir === "in" ? "You get about" : `You get about (${cur.iso3})`, value: dir === "in" ? rs(result) : `${result.toLocaleString("en-US", { maximumFractionDigits: 2 })} ${cur.iso3}`, sub: dir === "in" ? moneyInNepaliWords(Math.round(result)) : undefined, emphasize: true },
+          { label: `NRB rate for ${cur.unit} ${cur.iso3}`, value: `Buy ${cur.buy.toFixed(2)} · Sell ${cur.sell.toFixed(2)}` },
+        ]} />
+      )}
+      <p className="mt-3 text-xs text-ink-400">
+        {rates.fx ? `Nepal Rastra Bank rates for ${rates.fx.date}, updated automatically every hour.` : "Showing the reference US dollar rate only; the full NRB table is loading on our side."} Foreign → NPR uses the NRB buying rate; NPR → foreign uses the selling rate. Banks and remittance companies add their own margin and fees.
+      </p>
+      {rates.fx && (
+        <details className="mt-4">
+          <summary className="cursor-pointer text-sm font-semibold">See all {list.length} NRB rates</summary>
+          <div className="mt-2 overflow-x-auto rounded-2xl border border-ink-200 dark:border-ink-800">
+            <table className="w-full min-w-[420px] text-sm">
+              <thead><tr className="bg-ink-50 text-left text-xs uppercase tracking-wide text-ink-500 dark:bg-ink-800/40"><th className="px-4 py-2">Currency</th><th className="px-4 py-2 text-right">Unit</th><th className="px-4 py-2 text-right">Buy (रु)</th><th className="px-4 py-2 text-right">Sell (रु)</th></tr></thead>
+              <tbody>
+                {list.map((c) => (
+                  <tr key={c.iso3} className="border-t border-ink-100 dark:border-ink-800">
+                    <td className="px-4 py-2"><b>{c.iso3}</b> <span className="text-ink-500">{c.name}</span></td>
+                    <td className="tnum px-4 py-2 text-right">{c.unit}</td>
+                    <td className="tnum px-4 py-2 text-right">{c.buy.toFixed(2)}</td>
+                    <td className="tnum px-4 py-2 text-right">{c.sell.toFixed(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </details>
+      )}
+    </ToolShell>
+  );
+}
