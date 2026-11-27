@@ -13,6 +13,8 @@ const COLUMNS: Array<{ heading: string; links: Array<{ href: string; label: stri
       { href: "/nepali-calendar", label: "Nepali Calendar" },
       { href: "/gold-price-in-nepal", label: "Gold Price Today" },
       { href: "/usd-to-npr", label: "USD to NPR" },
+      { href: "/exchange-rate", label: "Exchange Rate History" },
+      { href: "/gold-price", label: "Gold Price History" },
       { href: "/emi-calculator-nepal", label: "EMI Calculator" },
       { href: "/preeti-to-unicode", label: "Preeti to Unicode" },
     ],
@@ -35,6 +37,8 @@ const COLUMNS: Array<{ heading: string; links: Array<{ href: string; label: stri
       { href: "/about", label: "About us" },
       { href: "/team", label: "Our team" },
       { href: "/how-we-verify", label: "How we check our data" },
+      { href: "/widgets", label: "Free widgets" },
+      { href: "/ne", label: "नेपालीमा (in Nepali)" },
       { href: "/faq", label: "FAQ" },
       { href: "/guides", label: "Guides" },
       { href: "/contact", label: "Contact us" },
@@ -81,7 +85,7 @@ export default function Footer() {
               Free, accurate tools for everyday life in Nepal. Dates, money, gold, exams and the Nepali language, made simple for your phone.
             </p>
             <p className="mt-5 text-sm text-white/50">Questions or corrections?</p>
-            <a href={`mailto:${SITE.email}`} className="text-sm font-semibold text-saffron-300 hover:text-saffron-200">{SITE.email}</a>
+            <a href="/contact" className="text-sm font-semibold text-saffron-300 hover:text-saffron-200">Send us a message</a>
           </div>
           {COLUMNS.map((col) => (
             <nav key={col.heading} aria-label={col.heading}>

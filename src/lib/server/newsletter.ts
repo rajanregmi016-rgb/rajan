@@ -16,7 +16,7 @@ function fromAddress() {
   return process.env.RESEND_FROM || `${SITE.name} <newsletter@allnepalitools.com>`;
 }
 
-export type OutEmail = { to: string; subject: string; html: string; text: string; unsubscribeUrl?: string };
+export type OutEmail = { to: string; subject: string; html: string; text: string; unsubscribeUrl?: string; replyTo?: string };
 
 function toResend(e: OutEmail) {
   return {
@@ -25,6 +25,7 @@ function toResend(e: OutEmail) {
     subject: e.subject,
     html: e.html,
     text: e.text,
+    ...(e.replyTo ? { reply_to: e.replyTo } : {}),
     ...(e.unsubscribeUrl
       ? { headers: { "List-Unsubscribe": `<${e.unsubscribeUrl}>`, "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" } }
       : {}),

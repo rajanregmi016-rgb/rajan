@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Mail, Send } from "lucide-react";
-import { SITE } from "@/config/site";
+import { CheckCircle2, Send } from "lucide-react";
 
 const TOPIC_OPTIONS: Array<[string, string]> = [
   ["Report an error", "A number or result looks wrong"],
@@ -13,15 +12,14 @@ const TOPIC_OPTIONS: Array<[string, string]> = [
 ];
 
 /**
- * Builds the message and opens the visitor's own email app, addressed to us.
- * Nothing is stored on our servers, and the visitor keeps a copy in their sent mail.
+ * Sends the message to /api/contact, which emails it to the site owner
+ * (reply goes straight back to the visitor) and keeps a private copy.
  */
 export default function ContactForm() {
   const [topic, setTopic] = useState(TOPIC_OPTIONS[0][0]);
   const [name, setName] = useState("");
   const [url, setUrl] = useState("");
   const [message, setMessage] = useState("");
-  const [opened, setOpened] = useState(false);
 
   // Prefill from "Report a problem" links on tool pages (?page=/slug).
   useEffect(() => {
@@ -33,22 +31,46 @@ export default function ContactForm() {
     }
   }, []);
 
-  const subject = `[${topic}] ${message.slice(0, 60).replace(/\s+/g, " ")}${message.length > 60 ? "…" : ""}`;
-  const body = `${message}\n\n${url ? `Page: ${url}\n` : ""}— ${name || "A visitor"}`;
-  const href = `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  const [email, setEmail] = useState("");
+  const [hp, setHp] = useState("");
+  const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [err, setErr] = useState("");
   const valid = message.trim().length >= 10;
 
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!valid || state === "sending") return;
+    setState("sending");
+    setErr("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic, name, email, page: url, message, website: hp }),
+      });
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(j.error || "Something went wrong.");
+      setState("sent");
+      setMessage("");
+    } catch (x) {
+      setErr(x instanceof Error ? x.message : "Something went wrong.");
+      setState("error");
+    }
+  }
+
+  if (state === "sent") {
+    return (
+      <div className="card p-6 sm:p-8" role="status">
+        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-brand-gradient text-white"><CheckCircle2 className="h-5 w-5" aria-hidden /></span>
+        <h2 className="mt-4 text-xl font-bold">Thank you, your message has been sent.</h2>
+        <p className="mt-2 text-ink-600 dark:text-ink-300">{email ? `We'll reply to ${email}, usually within two working days.` : "You didn't leave an email address, so we can't reply, but we read every message."}</p>
+        <button type="button" className="btn-ghost mt-5" onClick={() => setState("idle")}>Send another message</button>
+      </div>
+    );
+  }
+
   return (
-    <form
-      className="card p-6 sm:p-8"
-      aria-label="Contact form"
-      onSubmit={(e) => {
-        e.preventDefault();
-        if (!valid) return;
-        window.location.href = href;
-        setOpened(true);
-      }}
-    >
+    <form className="card p-6 sm:p-8" aria-label="Contact form" onSubmit={submit}>
       <fieldset>
         <legend className="label">What is it about?</legend>
         <div className="mt-1 flex flex-wrap gap-2">
@@ -73,6 +95,14 @@ export default function ContactForm() {
           <input value={name} onChange={(e) => setName(e.target.value)} type="text" maxLength={100} className="input" autoComplete="name" placeholder="Optional" />
         </label>
         <label className="block">
+          <span className="label">Your email (so we can reply)</span>
+          <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" maxLength={200} className="input" autoComplete="email" placeholder="you@example.com" />
+        </label>
+        <label className="hidden" aria-hidden="true">
+          Leave this empty
+          <input value={hp} onChange={(e) => setHp(e.target.value)} tabIndex={-1} autoComplete="off" />
+        </label>
+        <label className="block sm:col-span-2">
           <span className="label">Page link (if reporting an error)</span>
           <input value={url} onChange={(e) => setUrl(e.target.value)} type="url" className="input" placeholder="https://allnepalitools.com/…" autoComplete="off" />
         </label>
@@ -92,17 +122,12 @@ export default function ContactForm() {
       </label>
 
       <div className="mt-6 flex flex-wrap items-center gap-4">
-        <button type="submit" className="btn-primary !px-6 !py-3" disabled={!valid}>
-          <Send className="h-4 w-4" aria-hidden /> Write the email
+        <button type="submit" className="btn-primary !px-6 !py-3" disabled={!valid || state === "sending"}>
+          <Send className="h-4 w-4" aria-hidden /> {state === "sending" ? "Sending…" : "Send message"}
         </button>
-        <p className="text-sm text-ink-500">Opens your email app with the message ready to send.</p>
+        <p className="text-sm text-ink-500">Goes straight to our team. We never share your email.</p>
       </div>
-      {opened && (
-        <p className="mt-4 rounded-2xl bg-ink-50 p-4 text-sm text-ink-600 dark:bg-ink-800 dark:text-ink-300" role="status">
-          Your email app should open now. If it didn&apos;t, copy your message and send it to{" "}
-          <a href={`mailto:${SITE.email}`} className="inline-flex items-center gap-1 font-semibold text-brand-700 underline dark:text-brand-300"><Mail className="h-3.5 w-3.5" aria-hidden />{SITE.email}</a>.
-        </p>
-      )}
+      {state === "error" && <p className="mt-4 rounded-2xl bg-brand-50 p-4 text-sm text-brand-800 dark:bg-brand-900/30 dark:text-brand-200" role="alert">{err}</p>}
     </form>
   );
 }

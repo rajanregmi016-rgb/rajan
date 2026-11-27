@@ -16,6 +16,7 @@ import { absoluteUrl } from "@/config/site";
 import ToolStructuredPage from "@/components/ToolStructuredPage";
 import { BsTodayChip } from "@/components/BsTodayChip";
 import { FavoriteButton } from "@/components/ThemeToggle";
+import { NE_SLUGS } from "@/data/ne";
 
 interface Params {
   params: { slug: string };
@@ -34,7 +35,10 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     title: tool.title,
     description: tool.description,
     keywords: tool.keywords,
-    alternates: { canonical: absoluteUrl(`/${tool.slug}`) },
+    alternates: {
+      canonical: absoluteUrl(`/${tool.slug}`),
+      ...(NE_SLUGS.has(tool.slug) ? { languages: { en: absoluteUrl(`/${tool.slug}`), ne: absoluteUrl(`/ne/${tool.slug}`) } } : {}),
+    },
     openGraph: {
       title: tool.title,
       description: tool.description,
@@ -90,6 +94,7 @@ export default async function ToolPage({ params }: Params) {
           <span className="rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/15">Updated {formatDate(tool.lastUpdated)}</span>
           <span className="rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/15"><BsTodayChip className="devanagari" /></span>
           <FavoriteButton slug={tool.slug} onDark />
+          {NE_SLUGS.has(tool.slug) && <Link href={`/ne/${tool.slug}`} hrefLang="ne" className="devanagari rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/15 hover:bg-white/20">नेपालीमा पढ्नुहोस्</Link>}
         </div>
       </PageHero>
 

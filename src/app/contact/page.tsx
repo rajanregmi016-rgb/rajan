@@ -28,9 +28,8 @@ export default function ContactPage() {
         <aside className="space-y-4">
           <div className="card p-6">
             <span className="grid h-11 w-11 place-items-center rounded-2xl bg-brand-gradient text-white"><Mail className="h-5 w-5" aria-hidden /></span>
-            <h2 className="mt-4 text-lg font-bold">Email us directly</h2>
-            <a href={`mailto:${SITE.email}`} className="mt-1 block font-semibold text-brand-700 hover:underline dark:text-brand-300">{SITE.email}</a>
-            <p className="mt-2 text-sm leading-6 text-ink-500">For corrections, ideas, advertising and partnerships.</p>
+            <h2 className="mt-4 text-lg font-bold">We reply by email</h2>
+            <p className="mt-2 text-sm leading-6 text-ink-500">Your message comes straight to our team. Leave your email address and we&apos;ll write back, usually within two working days. Corrections, ideas, advertising and partnerships are all welcome.</p>
           </div>
           <ul className="card divide-y divide-ink-200 overflow-hidden dark:divide-ink-800">
             {[

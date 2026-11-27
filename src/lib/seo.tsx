@@ -13,7 +13,6 @@ export function orgJsonLd() {
         alternateName: SITE.nameNp,
         url: absoluteUrl("/"),
         logo: absoluteUrl("/logo.png"),
-        email: SITE.email,
       },
       {
         "@type": "WebSite",

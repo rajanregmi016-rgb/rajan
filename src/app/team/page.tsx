@@ -84,7 +84,7 @@ export default function TeamPage() {
               <Mail className="h-7 w-7 text-saffron-300" aria-hidden />
               <h2 className="mt-3 text-2xl font-bold">Work with us</h2>
               <p className="mt-2 leading-7 text-white/70">Know Nepali tax, land law or exams well? Want to help check data or write guides? We&apos;d like to hear from you.</p>
-              <a href={`mailto:${SITE.email}?subject=${encodeURIComponent("I'd like to help")}`} className="btn mt-5 bg-white text-navy-950 hover:bg-ink-100">Get in touch</a>
+              <a href="/contact" className="btn mt-5 bg-white text-navy-950 hover:bg-ink-100">Get in touch</a>
             </div>
           </div>
         </section>

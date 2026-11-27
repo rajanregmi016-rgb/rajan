@@ -21,7 +21,7 @@ export const STATIC_PAGES: StaticPage[] = [
 <h2>Suggest a tool or guide</h2>
 <p>Tell us which Nepal-specific task still has no good tool. Keyword research drives the roadmap, and requests with real demand get prioritised.</p>
 <h2>Business &amp; advertising</h2>
-<p>Contact us regarding advertising placements (once AdSense is live) or partnership queries at <strong>${SITE.email}</strong>.</p>
+<p>Contact us regarding advertising placements (once AdSense is live) or partnership queries through the form on this page.</p>
 `,
   },
   {
@@ -36,6 +36,8 @@ export const STATIC_PAGES: StaticPage[] = [
 <p>Tool inputs (dates, amounts, text you convert) are processed in your browser and are not sent to or stored on our servers. Favourite and recently used tools are saved in your browser's localStorage only. Like any website, our hosting provider (Vercel) may briefly log IP address and browser type for security and debugging.</p>
 <h2>Accounts and emails (optional)</h2>
 <p>You never need an account to use a tool. If you create one, we store your email address, your name if you add it, your saved tools, price alerts, saved Nepali dates and notifications, using Supabase as our database provider. When you sign in we record the time, browser type and approximate city/country (from your IP address) so we can send you a sign-in alert; you can turn these emails off. If you sign up for the daily rates email we store your email address and send it through Resend. Every email has an unsubscribe link, and you can delete your account and its data at any time from your account page.</p>
+<h2>Messages you send us</h2>
+<p>When you use the contact form we receive your message, your name and email if you give them, the page link, and your approximate country. We use them only to reply and fix problems, keep them privately, and never share them.</p>
 <h2>Analytics</h2>
 <p>We use <strong>Google Analytics</strong> to count visits and see which tools are useful. It uses cookies and collects aggregate information such as pages viewed, device type and approximate country. We do not use it to identify you.</p>
 <h2>Advertising and cookies</h2>
@@ -50,7 +52,7 @@ export const STATIC_PAGES: StaticPage[] = [
 <h2>Children</h2>
 <p>The site is suitable for students, but we do not knowingly collect personal information from children under 13.</p>
 <h2>Your choices</h2>
-<p>Clear your browser's localStorage to erase favourites and recent tools. Block or delete cookies in your browser to disable analytics and ad cookies. Contact <strong>${SITE.email}</strong> with any privacy question.</p>
+<p>Clear your browser's localStorage to erase favourites and recent tools. Block or delete cookies in your browser to disable analytics and ad cookies. Send any privacy question through our <a href="/contact">contact page</a>.</p>
 `,
   },
   {
@@ -94,7 +96,7 @@ export const STATIC_PAGES: StaticPage[] = [
 <h2>Changes</h2>
 <p>We may update tools, content and these terms at any time. The date at the top shows the latest version.</p>
 <h2>Contact</h2>
-<p>Questions about these terms: <strong>${SITE.email}</strong> or our <a href="/contact">contact page</a>.</p>
+<p>Questions about these terms: our <a href="/contact">contact page</a>.</p>
 `,
   },
 ];
