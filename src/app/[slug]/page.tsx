@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import PageHero from "@/components/PageHero";
 import { ToolCard } from "@/components/ToolCard";
 import { AdSlot } from "@/components/Analytics";
 import { getTool, getCategory, allTools, toolsInCategory } from "@/lib/tools";
@@ -72,34 +72,26 @@ export default async function ToolPage({ params }: Params) {
     <article>
       <JsonLd data={[toolJsonLd(tool), faqJsonLd(tool), breadcrumbJsonLd(crumbs)]} />
 
-      <header className={`border-b border-ink-200/80 bg-gradient-to-b ${meta.band} to-paper dark:border-ink-800 dark:from-ink-900 dark:to-ink-950`}>
-        <div className="container-np pb-6 pt-5 sm:pb-10 sm:pt-6">
-          <Breadcrumbs items={crumbs} />
-          <div className="flex items-start gap-4">
-            <span className={`hidden h-14 w-14 shrink-0 place-items-center rounded-2xl ring-1 ring-black/5 sm:grid ${meta.tile}`}>
-              <Icon className="h-7 w-7" aria-hidden />
-            </span>
-            <div className="min-w-0">
-              <h1 className="text-[26px] font-extrabold leading-tight tracking-tight text-ink-900 dark:text-ink-50 sm:text-4xl">
-                {tool.h1}
-              </h1>
-              <p className="devanagari mt-1.5 text-lg font-semibold text-brand-700 dark:text-brand-300" lang="ne">
-                {tool.h1Np}
-              </p>
-              <p className="mt-3 hidden max-w-2xl text-[15px] leading-6 text-ink-600 sm:block dark:text-ink-400">
-                {tool.description}
-              </p>
-              <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-ink-500">
-                <span className="rounded-full bg-white/80 px-2.5 py-1 ring-1 ring-ink-200 dark:bg-ink-900 dark:ring-ink-700">Updated {formatDate(tool.lastUpdated)}</span>
-                <span className="rounded-full bg-white/80 px-2.5 py-1 ring-1 ring-ink-200 dark:bg-ink-900 dark:ring-ink-700"><BsTodayChip className="devanagari" /></span>
-                <FavoriteButton slug={tool.slug} />
-              </div>
-            </div>
-          </div>
+      <PageHero
+        compact
+        crumbs={crumbs}
+        title={tool.h1}
+        titleNp={tool.h1Np}
+        description={<p className="hidden sm:block">{tool.description}</p>}
+        icon={
+          <span className={`hidden h-16 w-16 shrink-0 place-items-center rounded-2xl shadow-glow sm:grid ${meta.solid}`}>
+            <Icon className="h-8 w-8" aria-hidden />
+          </span>
+        }
+      >
+        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-white/70">
+          <span className="rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/15">Updated {formatDate(tool.lastUpdated)}</span>
+          <span className="rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/15"><BsTodayChip className="devanagari" /></span>
+          <FavoriteButton slug={tool.slug} onDark />
         </div>
-      </header>
+      </PageHero>
 
-      <div className="container-np grid gap-10 py-8 lg:grid-cols-[minmax(0,1fr)_300px]">
+      <div className="container-np grid gap-10 py-8 sm:py-10 lg:grid-cols-[minmax(0,1fr)_300px]">
         <div className="min-w-0">
           {/* The tool itself — always first in content order */}
           <section id="tool" aria-label={`${tool.shortTitle} tool`} className="scroll-mt-24">
@@ -128,7 +120,7 @@ export default async function ToolPage({ params }: Params) {
         <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start" aria-label="Related tools">
           {related.length > 0 && (
             <section aria-labelledby="rel-h">
-              <h2 id="rel-h" className="mb-3 text-sm font-bold uppercase tracking-wide text-ink-500">Related tools</h2>
+              <h2 id="rel-h" className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-ink-500">Related tools</h2>
               <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-1">
                 {related.map((t) => <ToolCard key={t.slug} tool={t} compact />)}
               </div>
@@ -136,8 +128,8 @@ export default async function ToolPage({ params }: Params) {
           )}
           {more.length > 0 && (
             <section aria-labelledby="more-h">
-              <h2 id="more-h" className="mb-3 text-sm font-bold uppercase tracking-wide text-ink-500">More in {category.name}</h2>
-              <ul className="card divide-y divide-ink-200 overflow-hidden dark:divide-ink-800">
+              <h2 id="more-h" className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-ink-500">More in {category.name}</h2>
+              <ul className="card divide-y divide-ink-200 overflow-hidden !rounded-2xl dark:divide-ink-800">
                 {more.map((t) => (
                   <li key={t.slug}>
                     <Link href={`/${t.slug}`} className="flex items-center justify-between gap-2 px-4 py-3 text-sm font-medium text-ink-800 hover:bg-ink-50 hover:text-brand-700 dark:text-ink-200 dark:hover:bg-ink-800">

@@ -12,9 +12,10 @@
   }
   h1, h2, h3 {
     @apply font-display;
+    letter-spacing: -0.02em;
   }
   ::selection {
-    @apply bg-brand-600/20;
+    @apply bg-brand-500/25;
   }
 }
 
@@ -23,62 +24,80 @@
     @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
   }
   .card {
-    @apply rounded-2xl border border-ink-200 bg-white shadow-card dark:border-ink-800 dark:bg-ink-900;
+    @apply rounded-3xl border border-ink-200/80 bg-white shadow-card dark:border-ink-800 dark:bg-ink-900;
   }
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600;
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500;
   }
   .btn-primary {
-    @apply btn bg-brand-600 text-white shadow-sm hover:bg-brand-700 active:bg-brand-800;
+    @apply btn bg-brand-600 text-white shadow-sm shadow-brand-600/30 hover:bg-brand-700 active:bg-brand-800;
+  }
+  .btn-dark {
+    @apply btn bg-navy-950 text-white hover:bg-navy-800 dark:bg-white dark:text-navy-950 dark:hover:bg-ink-100;
   }
   .btn-ghost {
-    @apply btn border border-ink-200 bg-white text-ink-700 hover:border-ink-300 hover:bg-ink-50 hover:text-ink-900 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-200 dark:hover:bg-ink-800;
+    @apply btn border border-ink-200 bg-white text-ink-800 hover:border-ink-300 hover:bg-ink-50 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-100 dark:hover:bg-ink-800;
   }
   .input {
-    @apply w-full rounded-xl border border-ink-200 bg-ink-50/60 px-3.5 py-2.5 text-[15px] text-ink-900 outline-none transition placeholder:text-ink-400 hover:border-ink-300 focus:border-navy-500 focus:bg-white focus:ring-4 focus:ring-navy-500/10 dark:border-ink-700 dark:bg-ink-950 dark:text-ink-100 dark:focus:border-navy-400;
+    @apply w-full rounded-2xl border border-ink-200 bg-ink-50 px-4 py-3 text-[15px] text-ink-900 outline-none transition placeholder:text-ink-400 hover:border-ink-300 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-500/15 dark:border-ink-700 dark:bg-ink-950 dark:text-ink-100;
   }
   select.input {
-    @apply pr-8;
+    @apply pr-9;
   }
   .label {
     @apply mb-1.5 block text-[13px] font-semibold text-ink-700 dark:text-ink-300;
   }
   .prose-np p {
-    @apply my-3 text-[16px] leading-7 text-ink-700 dark:text-ink-300;
+    @apply my-4 text-[16.5px] leading-[1.75] text-ink-700 dark:text-ink-300;
   }
   .prose-np h2 {
-    @apply mt-8 text-xl font-bold text-ink-900 dark:text-ink-50;
+    @apply mt-10 text-2xl font-bold text-ink-900 dark:text-ink-50;
   }
   .prose-np h3 {
-    @apply mt-6 text-lg font-bold text-ink-900 dark:text-ink-50;
+    @apply mt-7 text-lg font-bold text-ink-900 dark:text-ink-50;
   }
   .prose-np ul {
-    @apply my-3 ml-5 list-disc space-y-1.5 text-[16px] leading-7 text-ink-700 dark:text-ink-300;
+    @apply my-4 ml-5 list-disc space-y-2 text-[16.5px] leading-7 text-ink-700 marker:text-brand-500 dark:text-ink-300;
   }
   .prose-np ol {
-    @apply my-3 ml-5 list-decimal space-y-1.5 text-[16px] leading-7 text-ink-700 dark:text-ink-300;
+    @apply my-4 ml-5 list-decimal space-y-2 text-[16.5px] leading-7 text-ink-700 marker:font-bold marker:text-brand-600 dark:text-ink-300;
   }
   .prose-np a {
-    @apply font-medium text-brand-700 underline decoration-brand-300 underline-offset-2 hover:decoration-brand-600 dark:text-brand-300;
+    @apply font-semibold text-brand-700 underline decoration-brand-300 decoration-2 underline-offset-2 hover:decoration-brand-600 dark:text-brand-300;
   }
   .prose-np strong {
-    @apply font-semibold text-ink-900 dark:text-ink-100;
+    @apply font-semibold text-ink-900 dark:text-ink-50;
   }
   .prose-np table {
-    @apply my-4 w-full text-sm;
+    @apply my-5 w-full text-sm;
   }
   .prose-np td, .prose-np th {
-    @apply border-t border-ink-200 py-2 pr-4 text-left dark:border-ink-800;
+    @apply border-t border-ink-200 py-2.5 pr-4 text-left dark:border-ink-800;
   }
   .chip {
-    @apply inline-flex items-center rounded-full border border-ink-200 bg-white px-3 py-1.5 text-[13px] font-medium text-ink-700 transition hover:border-brand-300 hover:text-brand-700 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-300 dark:hover:text-brand-300;
+    @apply inline-flex items-center rounded-full border border-ink-200 bg-white px-3.5 py-1.5 text-[13px] font-medium text-ink-700 transition hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-300 dark:hover:bg-ink-800 dark:hover:text-brand-300;
+  }
+  .chip-dark {
+    @apply inline-flex items-center rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-[13px] font-medium text-white/80 transition hover:border-white/30 hover:bg-white/10 hover:text-white;
   }
   .eyebrow {
-    @apply text-xs font-bold uppercase tracking-[0.14em] text-brand-600 dark:text-brand-400;
+    @apply text-xs font-bold uppercase tracking-[0.16em] text-brand-600 dark:text-brand-400;
   }
-  .ad-slot {
-    @apply flex min-h-[70px] items-center justify-center rounded-xl border border-dashed border-ink-200 bg-ink-50/60 text-[11px] uppercase tracking-widest text-ink-400 dark:border-ink-800 dark:bg-ink-900/60 dark:text-ink-600;
+  .text-gradient {
+    @apply bg-brand-gradient bg-clip-text text-transparent;
   }
+}
+
+/* Dhaka-weave inspired diamond lattice, used as a subtle texture on dark surfaces */
+.dhaka {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.07' stroke-width='1'%3E%3Cpath d='M24 2 L46 24 L24 46 L2 24 Z'/%3E%3Cpath d='M24 12 L36 24 L24 36 L12 24 Z'/%3E%3Cpath d='M24 20 L28 24 L24 28 L20 24 Z' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 48px 48px;
+}
+.dhaka-light {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cg fill='none' stroke='%2318153f' stroke-opacity='0.05' stroke-width='1'%3E%3Cpath d='M24 2 L46 24 L24 46 L2 24 Z'/%3E%3Cpath d='M24 12 L36 24 L24 36 L12 24 Z'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 48px 48px;
 }
 
 .devanagari {
@@ -87,3 +106,5 @@
 .tnum {
   font-variant-numeric: tabular-nums;
 }
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }

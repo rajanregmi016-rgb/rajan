@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import PageHero from "@/components/PageHero";
 import { AdSlot } from "@/components/Analytics";
 import { GUIDES_LIST } from "@/data/guides";
 import { absoluteUrl } from "@/config/site";
@@ -33,8 +33,8 @@ const ARTICLE_SCHEMA = (slug: string, title: string, description: string, update
     dateModified: updated,
     datePublished: updated,
     image: absoluteUrl("/opengraph-image"),
-    author: { "@type": "Organization", name: "Nepali Tools", url: absoluteUrl("/") },
-    publisher: { "@type": "Organization", name: "Nepali Tools", logo: { "@type": "ImageObject", url: absoluteUrl("/logo.png") } },
+    author: { "@type": "Organization", name: "All Nepali Tools", url: absoluteUrl("/") },
+    publisher: { "@type": "Organization", name: "All Nepali Tools", logo: { "@type": "ImageObject", url: absoluteUrl("/logo.png") } },
     mainEntityOfPage: absoluteUrl(`/guides/${slug}`),
   },
   {
@@ -54,15 +54,12 @@ export default function GuidePage({ params }: Params) {
   return (
     <article>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_SCHEMA(g.slug, g.title, g.description, g.updated)) }} />
-      <header className="border-b border-ink-200/80 bg-gradient-to-b from-navy-50 to-paper dark:border-ink-800 dark:from-ink-900 dark:to-ink-950">
-        <div className="container-np pb-10 pt-6">
-          <Breadcrumbs items={[{ name: "Home", path: "/" }, { name: "Guides", path: "/guides" }, { name: g.title, path: `/guides/${g.slug}` }]} />
-          <p className="eyebrow">Guide</p>
-          <h1 className="mt-2 max-w-3xl text-[26px] font-extrabold leading-tight tracking-tight text-ink-900 dark:text-ink-50 sm:text-4xl">{g.title}</h1>
-          <p className="mt-3 max-w-2xl text-[15px] leading-6 text-ink-600 dark:text-ink-400">{g.description}</p>
-          <p className="mt-3 text-xs text-ink-500">Last updated {new Date(g.updated).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}</p>
-        </div>
-      </header>
+      <PageHero
+        crumbs={[{ name: "Home", path: "/" }, { name: "Guides", path: "/guides" }, { name: g.title, path: `/guides/${g.slug}` }]}
+        eyebrow="Guide"
+        title={g.title}
+        description={<><p>{g.description}</p><p className="mt-3 text-xs text-white/50">Last updated {new Date(g.updated).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })} · By the All Nepali Tools team</p></>}
+      />
       <div className="container-np py-10">
         <div className="prose-np max-w-3xl" dangerouslySetInnerHTML={{ __html: g.html }} />
         <div className="max-w-3xl"><AdSlot slot="content" /></div>

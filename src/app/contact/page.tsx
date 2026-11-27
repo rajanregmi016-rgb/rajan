@@ -1,51 +1,54 @@
 import type { Metadata } from "next";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import Link from "next/link";
+import { BookOpen, Bug, Lightbulb, Mail } from "lucide-react";
+import PageHero from "@/components/PageHero";
 import ContactForm from "@/app/contact/ContactForm";
 import { JsonLd, breadcrumbJsonLd } from "@/lib/seo";
 import { absoluteUrl, SITE } from "@/config/site";
-import { getStaticPage } from "@/data/staticPages";
 
 export const metadata: Metadata = {
   title: "Contact Us",
-  description: getStaticPage("contact")?.description,
+  description: "Report an error, suggest a tool, or reach the All Nepali Tools team about advertising and partnerships.",
   alternates: { canonical: absoluteUrl("/contact") },
 };
 
 export default function ContactPage() {
   return (
-    <div className="container-np py-8">
-      <JsonLd
-        data={breadcrumbJsonLd([
-          { name: "Home", path: "/" },
-          { name: "Contact Us", path: "/contact" },
-        ])}
+    <div>
+      <JsonLd data={breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "Contact Us", path: "/contact" }])} />
+      <PageHero
+        crumbs={[{ name: "Home", path: "/" }, { name: "Contact Us", path: "/contact" }]}
+        eyebrow="Contact"
+        title="We'd love to hear from you"
+        titleNp="हामीलाई लेख्नुहोस्"
+        description={<p>Spotted a wrong number? Want a new tool? We read every message and fix errors after checking the official source.</p>}
       />
-      <Breadcrumbs items={[{ name: "Home", path: "/" }, { name: "Contact Us", path: "/contact" }]} />
-
-      <header className="mb-8 max-w-2xl">
-        <h1 className="text-2xl font-extrabold text-ink-900 dark:text-ink-50 sm:text-3xl">Contact Us</h1>
-        <p className="mt-2 text-sm leading-6 text-ink-600 dark:text-ink-400">
-          We are a small team and genuinely read every message. Use the form below to report a data
-          error, suggest a tool, or reach us about advertising — we reply to the email you provide.
-        </p>
-      </header>
-
-      <div className="max-w-2xl">
+      <div className="container-np grid gap-8 py-12 lg:grid-cols-[1.6fr_1fr]">
         <ContactForm />
+        <aside className="space-y-4">
+          <div className="card p-6">
+            <span className="grid h-11 w-11 place-items-center rounded-2xl bg-brand-gradient text-white"><Mail className="h-5 w-5" aria-hidden /></span>
+            <h2 className="mt-4 text-lg font-bold">Email us directly</h2>
+            <a href={`mailto:${SITE.email}`} className="mt-1 block font-semibold text-brand-700 hover:underline dark:text-brand-300">{SITE.email}</a>
+            <p className="mt-2 text-sm leading-6 text-ink-500">For corrections, ideas, advertising and partnerships.</p>
+          </div>
+          <ul className="card divide-y divide-ink-200 overflow-hidden dark:divide-ink-800">
+            {[
+              { icon: Bug, t: "Report an error", d: "Send the page link and the number you expected. We check the official source, fix it, and update the page date." },
+              { icon: Lightbulb, t: "Suggest a tool", d: "Tell us which Nepali task still has no good tool. Popular requests are built first." },
+              { icon: BookOpen, t: "Before you write", d: "Many questions are answered in our FAQ." },
+            ].map((x) => (
+              <li key={x.t} className="flex gap-3 p-5">
+                <x.icon className="mt-0.5 h-5 w-5 shrink-0 text-brand-600" aria-hidden />
+                <div>
+                  <h3 className="font-semibold">{x.t}</h3>
+                  <p className="mt-1 text-sm leading-6 text-ink-500">{x.d}{x.t === "Before you write" && <> <Link href="/faq" className="font-semibold text-brand-700 underline">Read the FAQ</Link>.</>}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </aside>
       </div>
-
-      <section className="prose-np mt-10 max-w-2xl">
-        <h2 className="text-lg font-bold text-ink-900 dark:text-ink-50">What happens next</h2>
-        <p>
-          Error reports are verified against official sources before we fix anything, and the fixed
-          tool page gets a new last-updated date. Tool suggestions are matched against our keyword
-          research — ideas with real search demand get prioritised on the roadmap.
-        </p>
-        <p>
-          For advertising and business enquiries (available once Google AdSense is live), you can
-          also write directly to <strong>{SITE.email}</strong>.
-        </p>
-      </section>
     </div>
   );
 }

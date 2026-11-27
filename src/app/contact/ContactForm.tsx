@@ -1,114 +1,98 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
-import { CheckCircle2, Send } from "lucide-react";
-import { submitContactAction, type ContactFormState } from "@/app/contact/actions";
-
-const initialState: ContactFormState = { ok: false };
+import { useState } from "react";
+import { Mail, Send } from "lucide-react";
+import { SITE } from "@/config/site";
 
 const TOPIC_OPTIONS: Array<[string, string]> = [
-  ["error", "Report an error or wrong data"],
-  ["suggestion", "Suggest a new tool or guide"],
-  ["data", "Ask for a data/rate update"],
-  ["advertising", "Advertising / business enquiry"],
-  ["other", "Something else"],
+  ["Report an error", "A number or result looks wrong"],
+  ["Suggest a tool", "A tool or guide you'd like"],
+  ["Data source", "A better official source"],
+  ["Advertising", "Advertising or partnership"],
+  ["Other", "Something else"],
 ];
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <button type="submit" className="btn-primary w-full sm:w-auto" disabled={pending}>
-      <Send className="h-4 w-4" aria-hidden />
-      {pending ? "Sending…" : "Send message"}
-    </button>
-  );
-}
-
+/**
+ * Builds the message and opens the visitor's own email app, addressed to us.
+ * Nothing is stored on our servers, and the visitor keeps a copy in their sent mail.
+ */
 export default function ContactForm() {
-  const [state, formAction] = useFormState(submitContactAction, initialState);
+  const [topic, setTopic] = useState(TOPIC_OPTIONS[0][0]);
+  const [name, setName] = useState("");
+  const [url, setUrl] = useState("");
+  const [message, setMessage] = useState("");
+  const [opened, setOpened] = useState(false);
 
-  if (state.ok && state.message) {
-    return (
-      <div
-        className="card p-6 text-center"
-        role="status"
-        aria-live="polite"
-      >
-        <CheckCircle2 className="mx-auto h-10 w-10 text-green-600 dark:text-green-400" aria-hidden />
-        <h2 className="mt-3 text-lg font-bold text-ink-900 dark:text-ink-50">Message sent</h2>
-        <p className="mx-auto mt-2 max-w-md text-sm text-ink-600 dark:text-ink-400">{state.message}</p>
-      </div>
-    );
-  }
+  const subject = `[${topic}] ${message.slice(0, 60).replace(/\s+/g, " ")}${message.length > 60 ? "…" : ""}`;
+  const body = `${message}\n\n${url ? `Page: ${url}\n` : ""}— ${name || "A visitor"}`;
+  const href = `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  const valid = message.trim().length >= 10;
 
   return (
-    <form action={formAction} className="card relative p-5 sm:p-6" aria-label="Contact form">
-      {state.error && (
-        <p className="mb-4 rounded-xl border border-red-300 bg-red-50 p-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-950/40 dark:text-red-300" role="alert">
-          {state.error}
-        </p>
-      )}
-      <div className="grid gap-4 sm:grid-cols-2">
+    <form
+      className="card p-6 sm:p-8"
+      aria-label="Contact form"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (!valid) return;
+        window.location.href = href;
+        setOpened(true);
+      }}
+    >
+      <fieldset>
+        <legend className="label">What is it about?</legend>
+        <div className="mt-1 flex flex-wrap gap-2">
+          {TOPIC_OPTIONS.map(([v, hint]) => (
+            <button
+              key={v}
+              type="button"
+              title={hint}
+              onClick={() => setTopic(v)}
+              aria-pressed={topic === v}
+              className={`rounded-full px-4 py-2 text-sm font-medium transition ${topic === v ? "bg-navy-950 text-white dark:bg-white dark:text-navy-950" : "border border-ink-200 bg-white text-ink-700 hover:border-ink-300 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-200"}`}
+            >
+              {v}
+            </button>
+          ))}
+        </div>
+      </fieldset>
+
+      <div className="mt-5 grid gap-4 sm:grid-cols-2">
         <label className="block">
-          <span className="label">Your name *</span>
-          <input name="name" type="text" required maxLength={100} className="input" autoComplete="name" />
+          <span className="label">Your name</span>
+          <input value={name} onChange={(e) => setName(e.target.value)} type="text" maxLength={100} className="input" autoComplete="name" placeholder="Optional" />
         </label>
         <label className="block">
-          <span className="label">Email address *</span>
-          <input name="email" type="email" required className="input" autoComplete="email" />
-        </label>
-        <label className="block">
-          <span className="label">What is it about? *</span>
-          <select name="topic" required className="input" defaultValue="">
-            <option value="" disabled>
-              Choose one…
-            </option>
-            {TOPIC_OPTIONS.map(([v, label]) => (
-              <option key={v} value={v}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="block">
-          <span className="label">Page URL (if reporting an error)</span>
-          <input
-            name="url"
-            type="url"
-            className="input"
-            placeholder="https://…/tool-page"
-            autoComplete="off"
-          />
+          <span className="label">Page link (if reporting an error)</span>
+          <input value={url} onChange={(e) => setUrl(e.target.value)} type="url" className="input" placeholder="https://allnepalitools.com/…" autoComplete="off" />
         </label>
       </div>
       <label className="mt-4 block">
-        <span className="label">Message *</span>
+        <span className="label">Your message</span>
         <textarea
-          name="message"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
           required
           minLength={10}
           maxLength={4000}
           rows={6}
           className="input resize-y"
-          placeholder="Tell us what happened, what you expected, and which page or tool you were using…"
+          placeholder="Tell us what happened, what you expected, or what tool you'd like…"
         />
-        <span className="mt-1 block text-[11px] text-ink-400">10–4,000 characters. We reply to the email you provide.</span>
       </label>
 
-      {/* Honeypot — hidden from humans, catches bots */}
-      <div className="absolute left-[-9999px] top-[-9999px]" aria-hidden="true">
-        <label>
-          Leave this field empty
-          <input type="text" name="website" tabIndex={-1} autoComplete="off" />
-        </label>
+      <div className="mt-6 flex flex-wrap items-center gap-4">
+        <button type="submit" className="btn-primary !px-6 !py-3" disabled={!valid}>
+          <Send className="h-4 w-4" aria-hidden /> Write the email
+        </button>
+        <p className="text-sm text-ink-500">Opens your email app with the message ready to send.</p>
       </div>
-
-      <div className="mt-5 flex flex-wrap items-center gap-3">
-        <SubmitButton />
-        <p className="text-xs text-ink-400">
-          Prefer email? Write to <strong>support@nepalitools.com</strong>
+      {opened && (
+        <p className="mt-4 rounded-2xl bg-ink-50 p-4 text-sm text-ink-600 dark:bg-ink-800 dark:text-ink-300" role="status">
+          Your email app should open now. If it didn&apos;t, copy your message and send it to{" "}
+          <a href={`mailto:${SITE.email}`} className="inline-flex items-center gap-1 font-semibold text-brand-700 underline dark:text-brand-300"><Mail className="h-3.5 w-3.5" aria-hidden />{SITE.email}</a>.
         </p>
-      </div>
+      )}
     </form>
   );
 }

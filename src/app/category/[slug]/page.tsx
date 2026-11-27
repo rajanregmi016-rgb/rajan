@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import PageHero from "@/components/PageHero";
 import { ToolGrid } from "@/components/ToolCard";
 import { AdSlot } from "@/components/Analytics";
 import { allCategories, getCategory, toolsInCategory } from "@/lib/tools";
@@ -37,24 +38,24 @@ export default function CategoryPage({ params }: Params) {
         { name: "Home", path: "/" },
         { name: cat.name, path: `/category/${cat.slug}` },
       ])} />
-      <header className={`border-b border-ink-200/80 bg-gradient-to-b ${meta.band} to-paper dark:border-ink-800 dark:from-ink-900 dark:to-ink-950`}>
-        <div className="container-np pb-10 pt-6">
-          <Breadcrumbs items={[{ name: "Home", path: "/" }, { name: cat.name, path: `/category/${cat.slug}` }]} />
-          <div className="flex items-start gap-4">
-            <span className={`grid h-14 w-14 shrink-0 place-items-center rounded-2xl ring-1 ring-black/5 ${meta.tile}`}>
-              <Icon className="h-7 w-7" aria-hidden />
-            </span>
-            <div className="max-w-2xl">
-              <h1 className="text-[26px] font-extrabold leading-tight tracking-tight text-ink-900 dark:text-ink-50 sm:text-4xl">{cat.name}</h1>
-              <p className="devanagari mt-1 text-lg font-semibold text-brand-700 dark:text-brand-300" lang="ne">{cat.nameNp}</p>
-              <p className="mt-3 text-[15px] leading-6 text-ink-600 dark:text-ink-400">{cat.description}</p>
-              <p className="mt-3 text-sm font-semibold text-ink-500">{tools.length} {tools.length === 1 ? "tool" : "tools"}</p>
-            </div>
-          </div>
-        </div>
-      </header>
+      <PageHero
+        crumbs={[{ name: "Home", path: "/" }, { name: cat.name, path: `/category/${cat.slug}` }]}
+        eyebrow={`${tools.length} ${tools.length === 1 ? "tool" : "tools"}`}
+        title={cat.name}
+        titleNp={cat.nameNp}
+        description={<p>{cat.description}</p>}
+        icon={<span className={`grid h-14 w-14 shrink-0 place-items-center rounded-2xl shadow-glow sm:h-16 sm:w-16 ${meta.solid}`}><Icon className="h-7 w-7 sm:h-8 sm:w-8" aria-hidden /></span>}
+      />
       <div className="container-np py-10">
         <ToolGrid tools={tools} className="lg:grid-cols-3" />
+        <div className="mt-12">
+          <h2 className="text-xl font-bold">Other topics</h2>
+          <ul className="mt-4 flex flex-wrap gap-2">
+            {allCategories().filter((c) => c.slug !== cat.slug).map((c) => (
+              <li key={c.slug}><Link href={`/category/${c.slug}`} className="chip">{c.name}</Link></li>
+            ))}
+          </ul>
+        </div>
         <AdSlot slot="content" />
         <div className="prose-np mt-8 max-w-2xl">
           <p>

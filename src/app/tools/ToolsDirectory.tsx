@@ -36,7 +36,7 @@ export default function ToolsDirectory({ groups }: { groups: DirGroup[] }) {
             onChange={(e) => setQ(e.target.value)}
             placeholder="Filter tools… (e.g. gold, मिति, loan)"
             aria-label="Filter tools"
-            className="input h-11 rounded-xl bg-white pl-10 pr-10 dark:bg-ink-900"
+            className="input h-12 rounded-full bg-white pl-10 pr-10 dark:bg-ink-900"
           />
           {q && (
             <button type="button" onClick={() => setQ("")} aria-label="Clear filter" className="absolute right-2 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-lg text-ink-400 hover:bg-ink-100 hover:text-ink-700">
@@ -70,7 +70,7 @@ export default function ToolsDirectory({ groups }: { groups: DirGroup[] }) {
           return (
             <section key={g.slug} id={g.slug} aria-labelledby={`${g.slug}-h`} className="scroll-mt-44">
               <div className="mb-3 flex items-center gap-3">
-                <span className={`grid h-9 w-9 place-items-center rounded-lg ${m.tile}`}><Icon className="h-4 w-4" aria-hidden /></span>
+                <span className={`grid h-10 w-10 place-items-center rounded-xl ${m.solid}`}><Icon className="h-4 w-4" aria-hidden /></span>
                 <h2 id={`${g.slug}-h`} className="text-xl font-bold text-ink-900 dark:text-ink-50">
                   <Link href={`/category/${g.slug}`} className="hover:text-brand-700">{g.name}</Link>
                   <span className="devanagari ml-2 text-base font-semibold text-ink-400" lang="ne">{g.nameNp}</span>

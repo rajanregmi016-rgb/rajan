@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import PageHero from "@/components/PageHero";
 import { getStaticPage } from "@/data/staticPages";
 import { JsonLd, breadcrumbJsonLd } from "@/lib/seo";
 import { absoluteUrl } from "@/config/site";
@@ -22,14 +22,18 @@ export default function StaticPageView({ slug }: { slug: string }) {
         { name: "Home", path: "/" },
         { name: page.title, path: `/${page.slug}` },
       ])} />
-      <header className="border-b border-ink-200/80 bg-gradient-to-b from-ink-100 to-paper dark:border-ink-800 dark:from-ink-900 dark:to-ink-950">
-        <div className="container-np pb-10 pt-6">
-          <Breadcrumbs items={[{ name: "Home", path: "/" }, { name: page.title, path: `/${page.slug}` }]} />
-          <h1 className="text-[26px] font-extrabold tracking-tight text-ink-900 dark:text-ink-50 sm:text-4xl">{page.title}</h1>
-        </div>
-      </header>
+      <PageHero
+        crumbs={[{ name: "Home", path: "/" }, { name: page.title, path: `/${page.slug}` }]}
+        eyebrow={page.eyebrow}
+        title={page.title}
+        description={page.description ? <p>{page.description}</p> : undefined}
+      />
       <div className="container-np py-10">
-        <div className="prose-np max-w-3xl" dangerouslySetInnerHTML={{ __html: page.html }} />
+        <div className="mx-auto max-w-3xl">
+          <div className="card px-6 py-4 sm:px-10 sm:py-8">
+            <div className="prose-np" dangerouslySetInnerHTML={{ __html: page.html }} />
+          </div>
+        </div>
       </div>
     </div>
   );

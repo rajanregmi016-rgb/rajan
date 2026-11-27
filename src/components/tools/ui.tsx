@@ -5,7 +5,8 @@ import { Check, Copy, RotateCcw } from "lucide-react";
 
 export function ToolShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="card border-ink-300/70 p-4 shadow-tool sm:p-7 dark:border-ink-700" role="region" aria-label="Tool">
+    <div className="card relative overflow-hidden p-5 shadow-tool sm:p-8" role="region" aria-label="Tool">
+      <div className="absolute inset-x-0 top-0 h-1 bg-brand-gradient" aria-hidden />
       {children}
     </div>
   );
@@ -17,9 +18,9 @@ export function ResultCard({ items }: { items: Array<{ label: string; value: str
       {items.map((it) => (
         <div
           key={it.label}
-          className={`rounded-2xl p-4 ${it.emphasize ? "bg-navy-900 text-white dark:bg-navy-800" : "border border-ink-200 bg-ink-50 dark:border-ink-800 dark:bg-ink-800/40"}`}
+          className={`rounded-2xl p-4 sm:p-5 ${it.emphasize ? "bg-navy-950 text-white shadow-lift ring-1 ring-navy-800" : "border border-ink-200 bg-ink-50 dark:border-ink-800 dark:bg-ink-800/40"}`}
         >
-          <div className={`text-xs font-semibold uppercase tracking-wide ${it.emphasize ? "text-navy-200" : "text-ink-500"}`}>{it.label}</div>
+          <div className={`text-xs font-semibold uppercase tracking-wide ${it.emphasize ? "text-saffron-300" : "text-ink-500"}`}>{it.label}</div>
           <div className={`tnum mt-1 truncate font-display text-xl font-extrabold sm:text-2xl ${it.emphasize ? "text-white" : "text-ink-900 dark:text-ink-100"}`} title={it.value}>
             {it.value}
           </div>

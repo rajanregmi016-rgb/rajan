@@ -3,34 +3,17 @@ import { SITE } from "@/config/site";
 export interface StaticPage {
   slug: string;
   title: string;
+  eyebrow?: string;
   description: string;
   html: string;
 }
 
 export const STATIC_PAGES: StaticPage[] = [
   {
-    slug: "about",
-    title: "About Nepali Tools",
-    description:
-      "Who builds Nepali Tools and why — an independent, free utilities platform built for Nepal.",
-    html: `
-<p><strong>Nepali Tools (नेपाली टुल्स)</strong> is an independent, free online tools platform built for people in Nepal and the Nepali diaspora. We started with a simple observation: Nepal-specific questions — date conversion, gold rates, loan EMIs, SEE results, Preeti documents — deserve honest, fast tools instead of pop-up ad farms.</p>
-<h2>What we promise</h2>
-<ul>
-<li>Every tool runs in your browser — we don't store your inputs.</li>
-<li>Conversions use verified calendar data (BS 2000–2090) and documented formulas.</li>
-<li>Rate pages show their source and last-updated date, and clearly flag reference values.</li>
-<li>Content is written for Nepal, reviewed before publishing, and updated when rules change.</li>
-</ul>
-<h2>How we sustain the site</h2>
-<p>Non-intrusive advertising from Google AdSense covers hosting costs. Ads are always labelled and kept away from tool buttons, so you never click one by mistake. We never sell data or show fake traffic. If you find an error, please <a href="/contact">tell us</a> — corrections are our best SEO and our duty.</p>
-`,
-  },
-  {
     slug: "contact",
     title: "Contact Us",
     description:
-      "Report an error, suggest a tool, or reach the Nepali Tools editorial team.",
+      "Report an error, suggest a tool, or reach the All Nepali Tools editorial team.",
     html: `
 <p>We are a small team and genuinely read every message. Three common reasons to write:</p>
 <h2>Report a data or content error</h2>
@@ -44,10 +27,11 @@ export const STATIC_PAGES: StaticPage[] = [
   {
     slug: "privacy",
     title: "Privacy Policy",
+    eyebrow: "Legal",
     description:
-      "Nepali Tools privacy policy: what we collect (almost nothing), how Google Analytics and Google AdSense cookies work, and how to opt out.",
+      "All Nepali Tools privacy policy: what we collect (almost nothing), how Google Analytics and Google AdSense cookies work, and how to opt out.",
     html: `
-<p>Last updated: 27 November 2026. This policy explains what data Nepali Tools collects and why. In one sentence: <strong>our tools run in your browser and we collect almost nothing.</strong></p>
+<p>Last updated: 27 November 2026. This policy explains what data All Nepali Tools collects and why. In one sentence: <strong>our tools run in your browser and we collect almost nothing.</strong></p>
 <h2>What we collect</h2>
 <p>Tool inputs (dates, amounts, text you convert) are processed in your browser and are not sent to or stored on our servers. Favourite and recently used tools are saved in your browser's localStorage only. Like any website, our hosting provider (Vercel) may briefly log IP address and browser type for security and debugging.</p>
 <h2>Analytics</h2>
@@ -70,25 +54,27 @@ export const STATIC_PAGES: StaticPage[] = [
   {
     slug: "disclaimer",
     title: "Disclaimer",
+    eyebrow: "Legal",
     description:
-      "Information accuracy, financial data and no-advice disclaimer for Nepali Tools.",
+      "Information accuracy, financial data and no-advice disclaimer for All Nepali Tools.",
     html: `
-<p>Content on Nepali Tools is provided for information and convenience. While we work with verified data and review every update, we do not guarantee absolute accuracy; always confirm critical figures with official sources (Nepal Rastra Bank, Inland Revenue Department, FENEGOSIDA jewellers, NEB results, government offices).</p>
+<p>Content on All Nepali Tools is provided for information and convenience. While we work with verified data and review every update, we do not guarantee absolute accuracy; always confirm critical figures with official sources (Nepal Rastra Bank, Inland Revenue Department, FENEGOSIDA jewellers, NEB results, government offices).</p>
 <h2>Rates &amp; financial figures</h2>
 <p>Gold/silver and exchange rates are reference values with their source and date displayed on the page. Markets move; use live quotes before acting. Nothing on this site is financial, tax or legal advice — consult a licensed professional (banker, chartered accountant, lawyer) for your situation.</p>
 <h2>Editorial standards</h2>
 <p>Content is human-reviewed before publishing; the internal SEO engine only drafts suggestions, which sit in a review queue. We do not publish scraped, spun or auto-generated thin pages.</p>
 <h2>Liability</h2>
-<p>To the extent permitted by law, Nepali Tools is not liable for decisions made solely on the basis of content on this site.</p>
+<p>To the extent permitted by law, All Nepali Tools is not liable for decisions made solely on the basis of content on this site.</p>
 `,
   },
   {
     slug: "terms",
     title: "Terms of Use",
+    eyebrow: "Legal",
     description:
-      "The terms for using Nepali Tools: free personal use, accuracy, acceptable use, advertising and changes.",
+      "The terms for using All Nepali Tools: free personal use, accuracy, acceptable use, advertising and changes.",
     html: `
-<p>Last updated: 27 November 2026. By using Nepali Tools (the "site") you agree to these terms. If you don't agree, please don't use the site.</p>
+<p>Last updated: 27 November 2026. By using All Nepali Tools (the "site") you agree to these terms. If you don't agree, please don't use the site.</p>
 <h2>Free to use</h2>
 <p>All tools and guides are free for personal, educational and business use. You don't need an account. You may link to any page and share results you calculate.</p>
 <h2>Accuracy</h2>

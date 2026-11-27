@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { SITE, SITE_URL } from "@/config/site";
 import { Logo } from "@/components/Logo";
 
@@ -7,32 +8,39 @@ const COLUMNS: Array<{ heading: string; links: Array<{ href: string; label: stri
     heading: "Popular tools",
     links: [
       { href: "/bs-to-ad-converter", label: "BS to AD Converter" },
-      { href: "/gold-price-in-nepal", label: "Gold Price Nepal" },
+      { href: "/nepali-calendar", label: "Nepali Calendar" },
+      { href: "/gold-price-in-nepal", label: "Gold Price Today" },
       { href: "/usd-to-npr", label: "USD to NPR" },
       { href: "/emi-calculator-nepal", label: "EMI Calculator" },
       { href: "/preeti-to-unicode", label: "Preeti to Unicode" },
-      { href: "/see-gpa-calculator", label: "SEE GPA Calculator" },
     ],
   },
   {
-    heading: "Categories",
+    heading: "Topics",
     links: [
-      { href: "/category/nepali-date-calendar", label: "Nepali Date & Calendar" },
-      { href: "/category/finance-tax-currency", label: "Finance, Tax & Currency" },
-      { href: "/category/gold-silver-price", label: "Gold & Silver Prices" },
-      { href: "/category/nepali-language-unicode", label: "Nepali Language & Unicode" },
-      { href: "/category/land-everyday", label: "Land & Everyday Tools" },
+      { href: "/category/nepali-date-calendar", label: "Date & Calendar" },
+      { href: "/category/finance-tax-currency", label: "Finance & Tax" },
+      { href: "/category/gold-silver-price", label: "Gold & Silver" },
       { href: "/category/math-education", label: "Math & Education" },
       { href: "/category/see-exam", label: "SEE & Exam" },
+      { href: "/category/nepali-language-unicode", label: "Nepali Language" },
+      { href: "/category/land-everyday", label: "Land & Everyday" },
     ],
   },
   {
-    heading: "Site",
+    heading: "Company",
     links: [
-      { href: "/tools", label: "All Tools" },
-      { href: "/about", label: "About Us" },
-      { href: "/guides", label: "Guides & Tutorials" },
-      { href: "/contact", label: "Contact Us" },
+      { href: "/about", label: "About us" },
+      { href: "/team", label: "Our team" },
+      { href: "/how-we-verify", label: "How we check our data" },
+      { href: "/faq", label: "FAQ" },
+      { href: "/guides", label: "Guides" },
+      { href: "/contact", label: "Contact us" },
+    ],
+  },
+  {
+    heading: "Legal",
+    links: [
       { href: "/privacy", label: "Privacy Policy" },
       { href: "/terms", label: "Terms of Use" },
       { href: "/disclaimer", label: "Disclaimer" },
@@ -43,40 +51,50 @@ const COLUMNS: Array<{ heading: string; links: Array<{ href: string; label: stri
 export default function Footer() {
   const host = SITE_URL.replace(/^https?:\/\//, "").replace(/^www\./, "");
   return (
-    <footer className="relative mt-20 overflow-hidden bg-navy-950 text-navy-100">
-      <svg className="absolute inset-x-0 top-0 h-16 w-full text-navy-900/70" viewBox="0 0 1200 64" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0 64 L120 30 L190 48 L310 8 L420 40 L520 18 L640 50 L760 14 L860 38 L980 6 L1090 36 L1200 20 L1200 64 Z" fill="currentColor" />
-      </svg>
-      <div className="container-np relative grid gap-10 pb-12 pt-20 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
-        <div>
-          <Logo light />
-          <p className="mt-4 max-w-xs text-sm leading-6 text-navy-200">
-            Free online tools for Nepal: dates, money, gold rates, exams and the Nepali language. Fast, accurate and made for your phone.
-          </p>
-          <p className="devanagari mt-3 text-sm text-navy-300" lang="ne">सबै नेपाली टुल्स, एकै ठाउँमा।</p>
-          <a href={`mailto:${SITE.email}`} className="mt-4 inline-block text-sm text-navy-200 underline decoration-navy-500 underline-offset-4 hover:text-white">
-            {SITE.email}
-          </a>
+    <footer className="relative mt-24 overflow-hidden bg-navy-950 text-white">
+      <div className="dhaka absolute inset-0" aria-hidden />
+      <div className="absolute -left-32 top-0 h-72 w-72 rounded-full bg-brand-600/20 blur-3xl" aria-hidden />
+      <div className="container-np relative">
+        {/* CTA strip */}
+        <div className="flex flex-col items-start justify-between gap-6 border-b border-white/10 py-12 md:flex-row md:items-center">
+          <div>
+            <p className="font-display text-2xl font-extrabold sm:text-3xl">
+              Need a tool we don&apos;t have yet?
+            </p>
+            <p className="devanagari mt-1 text-white/60" lang="ne">भन्नुहोस्, हामी बनाउँछौं।</p>
+          </div>
+          <Link href="/contact" className="btn-primary !px-6 !py-3">
+            Suggest a tool <ArrowRight className="h-4 w-4" aria-hidden />
+          </Link>
         </div>
-        {COLUMNS.map((col) => (
-          <nav key={col.heading} aria-label={col.heading}>
-            <h2 className="mb-4 text-xs font-bold uppercase tracking-[0.14em] text-navy-300">{col.heading}</h2>
-            <ul className="space-y-2.5">
-              {col.links.map((l) => (
-                <li key={l.href}>
-                  <Link href={l.href} className="text-sm text-navy-100 transition hover:text-white hover:underline hover:underline-offset-4">
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        ))}
+
+        <div className="grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr_0.8fr]">
+          <div>
+            <Logo light />
+            <p className="mt-5 max-w-xs text-sm leading-6 text-white/65">
+              Free, accurate tools for everyday life in Nepal. Dates, money, gold, exams and the Nepali language, made simple for your phone.
+            </p>
+            <p className="mt-5 text-sm text-white/50">Questions or corrections?</p>
+            <a href={`mailto:${SITE.email}`} className="text-sm font-semibold text-saffron-300 hover:text-saffron-200">{SITE.email}</a>
+          </div>
+          {COLUMNS.map((col) => (
+            <nav key={col.heading} aria-label={col.heading}>
+              <h2 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-white/45">{col.heading}</h2>
+              <ul className="space-y-2.5">
+                {col.links.map((l) => (
+                  <li key={l.href}>
+                    <Link href={l.href} className="text-sm text-white/75 transition hover:text-white">{l.label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ))}
+        </div>
       </div>
-      <div className="relative border-t border-navy-800">
-        <div className="container-np flex flex-col gap-2 py-6 text-xs text-navy-300 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Nepali Tools ({host}). For information only; check important figures with official sources.</p>
-          <p className="devanagari" lang="ne">देश र देशवासीका लागि बनाइएको ❤️</p>
+      <div className="relative border-t border-white/10">
+        <div className="container-np flex flex-col gap-2 py-6 text-xs text-white/45 sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} All Nepali Tools ({host}). For information only; confirm important figures with official sources.</p>
+          <p className="devanagari" lang="ne">नेपाल र नेपालीका लागि, माया सहित ❤️</p>
         </div>
       </div>
     </footer>

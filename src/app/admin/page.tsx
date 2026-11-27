@@ -18,7 +18,7 @@ import { markMessageReadAction } from "@/app/contact/actions";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Admin — Nepali Tools",
+  title: "Admin — All Nepali Tools",
   robots: { index: false, follow: false },
 };
 
@@ -105,7 +105,7 @@ export default async function AdminPage() {
                 </p>
                 <p className="mt-1.5 whitespace-pre-wrap text-ink-700 dark:text-ink-300">{m.message}</p>
                 <a
-                  href={`mailto:${m.email}?subject=Re: your Nepali Tools message (${m.topic})`}
+                  href={`mailto:${m.email}?subject=Re: your All Nepali Tools message (${m.topic})`}
                   className="mt-2 inline-block text-xs text-brand-700 underline-offset-2 hover:underline dark:text-brand-300"
                 >
                   Reply by email

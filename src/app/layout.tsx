@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Mukta, Plus_Jakarta_Sans } from "next/font/google";
+import { Inter, Mukta, Sora } from "next/font/google";
 import { SITE, SITE_URL } from "@/config/site";
 import "./globals.css";
 import Header from "@/components/Header";
@@ -13,7 +13,7 @@ const inter = Inter({
   display: "swap",
 });
 
-const display = Plus_Jakarta_Sans({
+const display = Sora({
   subsets: ["latin"],
   weight: ["600", "700", "800"],
   variable: "--font-display",
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#fbf9f5",
+  themeColor: "#0d0b26",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -1,10 +1,11 @@
 export const SITE = {
-  name: "Nepali Tools",
-  nameNp: "नेपाली टुल्स",
+  name: "All Nepali Tools",
+  shortName: "AllNepali",
+  nameNp: "सबै नेपाली टुल्स",
   domain: "allnepalitools.com",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://allnepalitools.com",
-  tagline: "Nepal's all-in-one online tools platform",
-  taglineNp: "नेपालको सबै कुराको एक अनलाइन टुल्स प्लेटफर्म",
+  tagline: "Every Nepali tool, in one place",
+  taglineNp: "सबै नेपाली टुल्स, एकै ठाउँमा",
   description:
     "Free online tools for Nepal: Nepali date converter (BS to AD), gold price in Nepal today, USD to NPR, EMI calculator, VAT calculator, SEE GPA calculator, Preeti to Unicode, Nepali calendar and more — fast, accurate and mobile-friendly.",
   descriptionNp:
