@@ -1,0 +1,50 @@
+{
+  "gold": {
+    "fineTola": 254417,
+    "tejabiTola": 233046,
+    "silverTola": 2930,
+    "tenGram": 218203,
+    "updated": "2026-11-08T12:00:00+05:45",
+    "source": "FENEGOSIDA daily fixing (reference — confirm with a licensed dealer before any transaction)"
+  },
+  "forex": {
+    "fallbackUsdNpr": 150.26,
+    "updated": "2026-11-08",
+    "source": "Nepal Rastra Bank daily rate 8 Nov 2026 (buy Rs 149.96 / sell Rs 150.56, midpoint shown) — indicative; official rate is NRB"
+  },
+  "tax": {
+    "fiscalYear": "FY 2083/84",
+    "lastReviewed": "2026-05-20",
+    "note": "Editable slabs — confirm with latest Finance Act / Inland Revenue Department before filing.",
+    "slabs": {
+      "unmarried": [
+        { "upto": 600000, "rate": 0.01 },
+        { "upto": 850000, "rate": 0.1 },
+        { "upto": 1300000, "rate": 0.2 },
+        { "upto": 3000000, "rate": 0.3 },
+        { "upto": 999999999, "rate": 0.36 }
+      ],
+      "married": [
+        { "upto": 700000, "rate": 0.01 },
+        { "upto": 950000, "rate": 0.1 },
+        { "upto": 1400000, "rate": 0.2 },
+        { "upto": 3000000, "rate": 0.3 },
+        { "upto": 999999999, "rate": 0.36 }
+      ]
+    },
+    "ssfPercent": 11,
+    "ssfMonthlyCap": 500000,
+    "citMonthlyCap": 100000,
+    "ssfDeductibleMonthlyCap": 5000,
+    "citDeductibleMonthlyCap": 10000,
+    "ssfExtraDeductibleMonthlyCap": 3333,
+    "socialSecurityTaxMonthly": 500
+  },
+  "seoEngine": {
+    "contentQueue": [],
+    "updateHistory": [
+      { "date": "2026-11-08", "action": "Seeded gold/silver reference rates and forex fallback", "status": "verified" },
+      { "date": "2026-11-08", "action": "Launched 20 tools across 7 categories", "status": "verified" }
+    ]
+  }
+}

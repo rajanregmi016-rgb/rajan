@@ -1,0 +1,28 @@
+{
+  "seoEngine": {
+    "contentQueue": [
+      {
+        "id": "seed-1",
+        "createdAt": "2026-11-08",
+        "kind": "faq",
+        "toolSlug": "gold-price-in-nepal",
+        "text": "Draft FAQ: 'कति लाल एक तोला हो?' — auto-drafted from search queries; needs human check before adding.",
+        "confidence": "medium",
+        "status": "pending"
+      }
+    ],
+    "updateHistory": [
+      {
+        "date": "2026-11-08",
+        "action": "Seeded gold/silver reference rates (FENEGOSIDA 2026-11-06 fixing)",
+        "status": "verified"
+      },
+      {
+        "date": "2026-11-08",
+        "action": "Launched 20 tools across 7 categories",
+        "status": "verified"
+      }
+    ]
+  },
+  "contactMessages": []
+}
