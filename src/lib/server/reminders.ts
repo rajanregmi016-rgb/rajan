@@ -38,7 +38,7 @@ export function nextDue(d: number, today: Date) {
   return null;
 }
 
-/** Once a day (from 7 AM Nepal time), remind users of bills due today or tomorrow. */
+/** From 7 AM Nepal time: remind users 3 days before a bill is due, and again the day before. */
 export async function runBillReminders() {
   const db = supabaseAdmin();
   const { date: today, hour } = nepalTodayDate();
@@ -56,12 +56,15 @@ export async function runBillReminders() {
       for (const b of bills) {
         checked++;
         const due = nextDue(b.d, today);
-        if (due && due.days <= 1 && b.lastFor !== due.key) {
+        // First reminder 3 days before, a last one the day before.
+        const first = due && due.days <= 3 && b.lastFor3 !== due.key;
+        const last = due && due.days <= 1 && b.lastFor !== due.key && !first;
+        if (due && (first || last)) {
           try {
-            const when = due.days === 0 ? "today" : "tomorrow";
+            const when = due.days === 0 ? "today" : due.days === 1 ? "tomorrow" : `in ${due.days} days`;
             await addNotice(u.id, { kind: "reminder", title: "Payment reminder", body: `${b.label}${b.amount ? ` (Rs ${b.amount.toLocaleString("en-IN")})` : ""} is due ${when}, ${due.label}.`, href: "/account#bills" }).catch(() => null);
             if (u.email && resendReady() && prefsOf(meta).alertEmail) await sendOne(billEmail(u.email, b, due.label, due.days));
-            next.push({ ...b, lastFor: due.key });
+            next.push({ ...b, lastFor3: due.key, ...(due.days <= 1 ? { lastFor: due.key } : {}) });
             changed = true;
             sent++;
             continue;

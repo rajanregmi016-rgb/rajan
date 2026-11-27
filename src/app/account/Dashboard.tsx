@@ -176,7 +176,7 @@ export function MyWallet({ user, rates }: { user: User; rates: DashRates }) {
 }
 
 /* ---------- bills ---------- */
-type Bill = { id: string; label: string; d: number; amount?: number; lastFor?: string };
+type Bill = { id: string; label: string; d: number; amount?: number; lastFor?: string; lastFor3?: string };
 function monthDays(y: number, m: number) {
   for (let d = 32; d >= 29; d--) { try { const nd = new NepaliDate(y, m, d); if (nd.getMonth() === m && nd.getDate() === d) return d; } catch {} }
   return 30;
@@ -213,7 +213,7 @@ export function BillReminders({ user }: { user: User }) {
   return (
     <section id="bills" className="card scroll-mt-24 p-6">
       <h2 className="flex items-center gap-2 text-lg font-extrabold"><CalendarClock className="h-5 w-5 text-saffron-500" aria-hidden /> Bill and payment reminders</h2>
-      <p className="mt-1 text-sm text-ink-500">Rent, electricity, EMI, dhukuti: pick the Nepali date (gate) you pay each month. We&apos;ll email you and ring your bell the day before.</p>
+      <p className="mt-1 text-sm text-ink-500">Rent, electricity, EMI, dhukuti: pick the Nepali date (gate) you pay each month. We&apos;ll email you 3 days before it&apos;s due, and again the day before.</p>
       {sorted.length > 0 && (
         <>
           <ul className="mt-4 space-y-2">
@@ -224,7 +224,7 @@ export function BillReminders({ user }: { user: User }) {
                   <p className="text-xs text-ink-500">Every month on <span className="devanagari">{toNpDigits(b.d)} गते</span>{n ? ` · next ${n.label}` : ""}</p>
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
-                  {n && <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${n.days <= 1 ? "bg-brand-600 text-white" : "bg-ink-100 text-ink-700 dark:bg-ink-800 dark:text-ink-200"}`}>{n.days === 0 ? "Due today" : n.days === 1 ? "Tomorrow" : `${n.days} days`}</span>}
+                  {n && <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${n.days <= 3 ? "bg-brand-600 text-white" : "bg-ink-100 text-ink-700 dark:bg-ink-800 dark:text-ink-200"}`}>{n.days === 0 ? "Due today" : n.days === 1 ? "Tomorrow" : `${n.days} days`}</span>}
                   <button aria-label="Delete reminder" className="rounded-lg p-1.5 text-ink-400 hover:bg-ink-100 hover:text-brand-600 dark:hover:bg-ink-800" onClick={() => persist(bills.filter((x) => x.id !== b.id))}><Trash2 className="h-4 w-4" /></button>
                 </div>
               </li>
