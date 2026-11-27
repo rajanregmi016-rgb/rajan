@@ -48,6 +48,22 @@ function mapRates(list: any[]): FxRate[] {
 
 /** NRB daily rates between two dates (inclusive), oldest first. Cached by Next. */
 export async function getNrbRange(from: string, to: string, revalidate = 21600): Promise<FxDay[]> {
+  // NRB answers long ranges poorly, so ask for at most ~60 days at a time.
+  const span = (Date.parse(to) - Date.parse(from)) / 864e5;
+  if (span > 60) {
+    const parts: Promise<FxDay[]>[] = [];
+    for (let end = to; end >= from; end = shiftDate(end, -60)) {
+      const start = shiftDate(end, -59) < from ? from : shiftDate(end, -59);
+      parts.push(getNrbChunk(start, end, end === to ? Math.min(revalidate, 3600) : revalidate));
+    }
+    const all = (await Promise.all(parts)).flat();
+    const seen = new Set<string>();
+    return all.filter((d) => (seen.has(d.date) ? false : (seen.add(d.date), true))).sort((a, b) => a.date.localeCompare(b.date));
+  }
+  return getNrbChunk(from, to, revalidate);
+}
+
+async function getNrbChunk(from: string, to: string, revalidate: number): Promise<FxDay[]> {
   const out: FxDay[] = [];
   for (let page = 1; page <= 6; page++) {
     const url = `${process.env.NRB_BASE || "https://www.nrb.org.np"}/api/forex/v1/rates?page=${page}&per_page=100&from=${from}&to=${to}`;
