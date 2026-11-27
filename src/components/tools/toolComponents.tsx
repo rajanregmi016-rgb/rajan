@@ -11,6 +11,10 @@ import { GoldTool, NumWordsTool, SeeGpaTool } from "@/components/tools/miscTools
 import {
   PreetiTool, TypingTool, PercentageTool, UnitTool, BmiTool, LandTool, NepalTimeTool,
 } from "@/components/tools/moreTools";
+import {
+  SipTool, FdTool, SimpleInterestTool, DiscountTool, LakhCroreTool,
+  TolaTool, WordCountTool, BillSplitTool, FuelCostTool, NebGpaTool,
+} from "@/components/tools/extraTools";
 import type { RatesData } from "@/lib/rates";
 import type { ToolComponentKey } from "@/lib/tools";
 
@@ -37,4 +41,14 @@ export const TOOL_COMPONENTS: Record<ToolComponentKey, React.ComponentType<ToolP
   numWords: NumWordsTool,
   land: LandTool,
   time: NepalTimeTool,
+  sip: SipTool,
+  fd: FdTool,
+  simpleInterest: SimpleInterestTool,
+  discount: DiscountTool,
+  lakhCrore: LakhCroreTool,
+  tola: TolaTool,
+  wordCount: WordCountTool,
+  billSplit: BillSplitTool,
+  fuelCost: FuelCostTool,
+  nebGpa: NebGpaTool,
 };

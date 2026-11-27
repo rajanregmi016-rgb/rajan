@@ -5,6 +5,7 @@ import { FINANCE_TOOLS } from "@/data/tools/finance";
 import {
   GOLD_TOOLS, MATH_EDU_TOOLS, SEE_TOOLS, LANGUAGE_TOOLS, EVERYDAY_TOOLS,
 } from "@/data/tools/content-b";
+import { EXTRA_TOOLS } from "@/data/tools/extra";
 
 export { CATEGORIES };
 
@@ -18,7 +19,9 @@ function buildTools(): Tool[] {
     ...MATH_EDU_TOOLS,
     ...SEE_TOOLS,
     ...LANGUAGE_TOOLS,
-    ...EVERYDAY_TOOLS,  ];
+    ...EVERYDAY_TOOLS,
+    ...EXTRA_TOOLS,
+  ];
   const seen = new Set<string>();
   return groups.filter((t) => {
     if (seen.has(t.slug)) {

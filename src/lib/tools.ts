@@ -12,7 +12,9 @@ export type ToolComponentKey =
   | "bs2ad" | "ad2bs" | "calendar" | "age" | "dateDiff"
   | "emi" | "incomeTax" | "vat" | "usdNpr" | "compound"
   | "gold" | "percentage" | "unit" | "bmi" | "seeGpa"
-  | "preeti" | "typing" | "numWords" | "land" | "time";
+  | "preeti" | "typing" | "numWords" | "land" | "time"
+  | "sip" | "fd" | "simpleInterest" | "discount" | "lakhCrore"
+  | "tola" | "wordCount" | "billSplit" | "fuelCost" | "nebGpa";
 
 export interface Tool {
   slug: string;

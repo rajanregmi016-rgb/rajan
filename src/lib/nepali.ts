@@ -18,7 +18,6 @@ export const WEEKDAYS_FULL_NP = ["आइतबार", "सोमबार", "�
 
 const ONES_NP = ["शून्य", "एक", "दुई", "तीन", "चार", "पाँच", "छ", "सात", "आठ", "नौ", "दस",
   "एघार", "बाह्र", "तेह्र", "चौध", "पन्ध्र", "सोह्र", "सत्र", "अठार", "उन्नाइस", "बीस"];
-const TENS_NP = ["", "बीस", "तीस", "चालीस", "पचास", "साठी", "सत्तरी", "अस्सी", "नब्बे"];
 
 /** Convert ASCII digits in a string to Devanagari digits. */
 export function toNpDigits(s: string | number): string {
@@ -49,13 +48,9 @@ export function groupAsian(n: number): string {
   return sign + `${rest},${last3}`;
 }
 
-const TWO_NP = (n: number): string => {
-  if (n <= 20) return ONES_NP[n];
-  const t = Number(String(n)[0]);
-  const o = Number(String(n)[1]);
-  if (o === 0) return TENS_NP[t];
-  return ONES_NP[o] + " " + TENS_NP[t];
-};
+const NP_0_99 = ["शून्य", "एक", "दुई", "तीन", "चार", "पाँच", "छ", "सात", "आठ", "नौ", "दश", "एघार", "बाह्र", "तेह्र", "चौध", "पन्ध्र", "सोह्र", "सत्र", "अठार", "उन्नाइस", "बीस", "एक्काइस", "बाइस", "तेइस", "चौबीस", "पच्चीस", "छब्बीस", "सत्ताइस", "अठ्ठाइस", "उनन्तीस", "तीस", "एकतीस", "बत्तीस", "तेत्तीस", "चौँतीस", "पैँतीस", "छत्तीस", "सैँतीस", "अठतीस", "उनन्चालीस", "चालीस", "एकचालीस", "बयालीस", "त्रिचालीस", "चवालीस", "पैँतालीस", "छयालीस", "सतचालीस", "अठचालीस", "उनन्पचास", "पचास", "एकाउन्न", "बाउन्न", "त्रिपन्न", "चउन्न", "पचपन्न", "छपन्न", "सन्ताउन्न", "अन्ठाउन्न", "उनन्साठी", "साठी", "एकसट्ठी", "बयसट्ठी", "त्रिसट्ठी", "चौंसट्ठी", "पैंसट्ठी", "छयसट्ठी", "सतसट्ठी", "अठसट्ठी", "उनन्सत्तरी", "सत्तरी", "एकहत्तर", "बहत्तर", "त्रिहत्तर", "चौहत्तर", "पचहत्तर", "छयहत्तर", "सतहत्तर", "अठहत्तर", "उनासी", "असी", "एकासी", "बयासी", "त्रियासी", "चौरासी", "पचासी", "छयासी", "सतासी", "अठासी", "उनान्नब्बे", "नब्बे", "एकानब्बे", "बयानब्बे", "त्रियानब्बे", "चौरानब्बे", "पन्चानब्बे", "छयानब्बे", "सन्तानब्बे", "अन्ठानब्बे", "उनान्सय"];
+
+const TWO_NP = (n: number): string => NP_0_99[n] ?? String(n);
 
 /** Write an integer in Nepali words (crore/crore/lac/thousand system). */
 export function nepaliWords(n: number): string {
@@ -63,13 +58,13 @@ export function nepaliWords(n: number): string {
   if (n === 0) return "शून्य";
   const parts: string[] = [];
   const units: Array<[number, string]> = [
-    [1000000000, "अर्ब"], [10000000, "कोटि"], [100000, "लाख"], [1000, "हजार"],
+    [100000000000, "खर्ब"], [1000000000, "अर्ब"], [10000000, "करोड"], [100000, "लाख"], [1000, "हजार"],
   ];
   let x = n;
   for (const [d, name] of units) {
     const q = Math.floor(x / d);
     if (q > 0) {
-      parts.push(q <= 1999 && d >= 100000000 ? `${qToWords999(q)} ${name}` : `${q < 100 ? TWO_NP(q) : qToWords999(q)} ${name}`);
+      parts.push(`${q < 100 ? TWO_NP(q) : nepaliWords(q)} ${name}`);
       x = x % d;
     }
   }
@@ -110,7 +105,7 @@ export function englishWordsAsian(n: number): string {
   let x = n;
   for (const [d, name] of units) {
     const q = Math.floor(x / d);
-    if (q > 0) { parts.push(`${q < 100 ? EN_ONES[q] : enWordsLess1000(Math.min(q, 999))} ${name}`); x = x % d; }
+    if (q > 0) { parts.push(`${q < 1000 ? enWordsLess1000(q) : englishWordsAsian(q)} ${name}`); x = x % d; }
   }
   if (x > 0) parts.push(enWordsLess1000(x));
   return parts.join(" ");
