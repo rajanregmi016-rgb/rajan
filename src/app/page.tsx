@@ -7,6 +7,7 @@ import { ToolCard } from "@/components/ToolCard";
 import { GlobalSearch } from "@/components/Header";
 import { RecentlyOrFavorites } from "@/components/ThemeToggle";
 import { AdSlot } from "@/components/Analytics";
+import YourTools from "@/components/YourTools";
 import { getLiveRates } from "@/lib/server/marketData";
 import { KEYWORD_IDEAS } from "@/lib/keywords";
 import { orgJsonLd, JsonLd } from "@/lib/seo";
@@ -84,6 +85,7 @@ export default async function HomePage() {
       <div className="container-np py-14 sm:py-16">
         <RecentlyOrFavorites className="mb-12" />
 
+        <YourTools />
         {/* ───────── Topics ───────── */}
         <section aria-labelledby="cat-h">
           <SectionHead id="cat-h" title="Choose a topic" titleNp="विषय छान्नुहोस्" />

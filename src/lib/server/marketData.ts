@@ -94,8 +94,21 @@ export function parseFenegosida(html: string): MarketSnapshot["gold"] {
 export async function fetchFenegosida(): Promise<MarketSnapshot["gold"]> {
   const res = await fetch("https://www.fenegosida.org/", { cache: "no-store", headers: { "User-Agent": UA }, signal: AbortSignal.timeout(20000) });
   if (!res.ok) throw new Error(`FENEGOSIDA HTTP ${res.status}`);
-  const gold = parseFenegosida(await res.text());
-  if (!gold) throw new Error("FENEGOSIDA page could not be parsed");
+  const html = await res.text();
+  const gold = parseFenegosida(html);
+  if (!gold) {
+    const i = html.search(/gold/i);
+    const text = html.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/\s+/g, " ");
+    const j = text.search(/fine\s*gold/i);
+    console.log("[fenegosida-diag]", JSON.stringify({
+      len: html.length,
+      head: html.slice(0, 300),
+      rawAroundGold: i >= 0 ? html.slice(Math.max(0, i - 300), i + 1500) : null,
+      textAroundFine: j >= 0 ? text.slice(Math.max(0, j - 200), j + 1500) : null,
+      scripts: Array.from(html.matchAll(/<script[^>]+src="([^"]+)"/gi)).map((m) => m[1]).slice(0, 15),
+    }));
+    throw new Error("FENEGOSIDA page could not be parsed");
+  }
   return gold;
 }
 

@@ -105,6 +105,43 @@ export function welcomeEmail(to: string, unsubscribeUrl: string): OutEmail {
   };
 }
 
+export function accountWelcomeEmail(to: string, name: string): OutEmail {
+  const hi = name ? `Namaste ${esc(name.split(" ")[0])}!` : "Namaste!";
+  const inner = `<h1 style="font-size:22px;margin:0 0 10px">${hi} Your account is ready.</h1>
+<p style="line-height:1.6;margin:0 0 12px">Here is what you can do now that you're signed in:</p>
+<ul style="line-height:1.8;padding-left:18px;margin:0 0 12px">
+<li><b>Save tools</b> with the star, and find them on any phone or computer.</li>
+<li><b>Price alerts:</b> get an email when gold or the US dollar crosses a price you choose.</li>
+<li><b>My dates:</b> save birthdays and anniversaries in the Nepali calendar and see how many days are left.</li>
+<li><b>Daily rates email</b> each morning, if you switch it on.</li>
+</ul>
+<p style="margin:18px 0"><a href="${SITE_URL}/account" style="background:#e0123f;color:#fff;text-decoration:none;padding:12px 18px;border-radius:12px;font-weight:600;display:inline-block">Open my account</a></p>`;
+  return {
+    to,
+    subject: `Welcome to ${SITE.name}`,
+    html: shell(inner),
+    text: `${name ? `Namaste ${name}!` : "Namaste!"} Your All Nepali Tools account is ready: save tools, set gold/dollar price alerts, save Nepali dates and get the daily rates email.\n${SITE_URL}/account`,
+  };
+}
+
+export type PriceAlert = { id: string; metric: "gold" | "usd"; dir: "above" | "below"; value: number; lastSent?: string };
+
+export function alertEmail(to: string, a: PriceAlert, current: number, source: string): OutEmail {
+  const what = a.metric === "gold" ? "Fine gold (per tola)" : "1 US dollar";
+  const fmt = (n: number) => (a.metric === "gold" ? `Rs ${groupAsian(n)}` : `Rs ${n.toFixed(2)}`);
+  const inner = `<p style="font-size:13px;color:#e0123f;font-weight:600;margin:0">Price alert</p>
+<h1 style="font-size:22px;margin:2px 0 12px">${what} is now ${fmt(current)}</h1>
+<p style="line-height:1.6;margin:0 0 12px">You asked us to tell you when it goes <b>${a.dir} ${fmt(a.value)}</b>. Source: ${esc(source)}.</p>
+<p style="margin:18px 0"><a href="${SITE_URL}/${a.metric === "gold" ? "gold-price-in-nepal" : "usd-to-npr"}" style="background:#e0123f;color:#fff;text-decoration:none;padding:12px 18px;border-radius:12px;font-weight:600;display:inline-block">See today's rate</a></p>
+<p style="font-size:12px;color:#6b6985">Manage or delete alerts on <a href="${SITE_URL}/account" style="color:#e0123f">your account page</a>. We send each alert at most once a day.</p>`;
+  return {
+    to,
+    subject: `Alert: ${what} ${a.dir} ${fmt(a.value)} (now ${fmt(current)})`,
+    html: shell(inner),
+    text: `${what} is now ${fmt(current)} (${a.dir} ${fmt(a.value)}). ${SITE_URL}/account`,
+  };
+}
+
 export function dailyDigest(snap: MarketSnapshot | null, now = new Date()) {
   const bs = bsToday(now);
   const tools = allTools();

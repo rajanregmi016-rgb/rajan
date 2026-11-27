@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { History, KeyRound, Loader2, LogOut, Mail, Star } from "lucide-react";
+import { History, KeyRound, Loader2, LogOut, Star } from "lucide-react";
 import { useAuth } from "@/components/AuthProvider";
 import { supabase } from "@/lib/supabaseClient";
 import { FAVS_EVENT, RecentTools } from "@/lib/userTools";
-import NewsletterSignup from "@/components/NewsletterSignup";
+import { DailyEmailToggle, MyDates, PriceAlerts, ProfileName, useWelcomeEmail } from "./AccountExtras";
 
-export default function AccountView() {
+export default function AccountView({ gold, usd }: { gold: number; usd: number }) {
   const { user, ready, enabled } = useAuth();
   const router = useRouter();
   const [favs, setFavs] = useState<string[]>([]);
@@ -18,6 +18,7 @@ export default function AccountView() {
   const [pwMsg, setPwMsg] = useState<{ ok: boolean; t: string } | null>(null);
   const [busy, setBusy] = useState(false);
 
+  useWelcomeEmail(user);
   useEffect(() => {
     if (ready && !user) router.replace("/login");
   }, [ready, user, router]);
@@ -80,19 +81,18 @@ export default function AccountView() {
           <h2 className="flex items-center gap-2 text-lg font-extrabold"><History className="h-5 w-5 text-brand-600" aria-hidden /> Recently used on this device</h2>
           {list(recent, "Tools you open will show up here.")}
         </section>
-        <section className="card p-6">
-          <h2 className="flex items-center gap-2 text-lg font-extrabold"><Mail className="h-5 w-5 text-brand-600" aria-hidden /> Daily rates by email</h2>
-          <p className="mt-2 text-sm text-ink-500">Get today&apos;s gold price and Nepal Rastra Bank exchange rates every morning.</p>
-          <div className="mt-4"><NewsletterSignup source="account" dark={false} /></div>
-        </section>
+        <PriceAlerts user={user} gold={gold} usd={usd} />
+        <MyDates user={user} />
       </div>
       <aside className="space-y-6">
+        <DailyEmailToggle />
         <section className="card p-6">
           <div className="flex items-center gap-3">
             <span className="grid h-12 w-12 place-items-center rounded-full bg-brand-gradient text-lg font-bold text-white">{name.charAt(0).toUpperCase()}</span>
             <div className="min-w-0">
               <p className="truncate font-bold">{name}</p>
               <p className="truncate text-sm text-ink-500">{user.email}</p>
+              <ProfileName user={user} />
             </div>
           </div>
           <p className="mt-4 text-xs text-ink-400">Signed in with {provider === "google" ? "Google" : "email"}</p>

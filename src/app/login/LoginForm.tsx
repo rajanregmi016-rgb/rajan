@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Eye, EyeOff, Loader2, Mail } from "lucide-react";
 import { supabase, authEnabled } from "@/lib/supabaseClient";
+import GoogleButton from "./GoogleButton";
 import { useAuth } from "@/components/AuthProvider";
 
 type Mode = "signin" | "signup" | "link" | "forgot";
@@ -61,6 +62,9 @@ export default function LoginForm({ initialMode = "signin" }: { initialMode?: Mo
     }
   }
 
+  const goAccount = useCallback(() => router.replace("/account"), [router]);
+  const googleError = useCallback((m: string) => setMsg({ ok: false, text: friendly(m) }), []);
+
   async function google() {
     const sb = supabase();
     if (!sb) return;
@@ -102,9 +106,17 @@ export default function LoginForm({ initialMode = "signin" }: { initialMode?: Mo
 
       {(mode === "signin" || mode === "signup") && (
         <>
-          <button type="button" onClick={google} disabled={busy} className="btn-ghost mt-5 w-full !py-3">
-            <GoogleIcon /> Continue with Google
-          </button>
+          <div className="mt-5">
+            <GoogleButton
+              label={mode === "signup" ? "signup_with" : "signin_with"}
+              onDone={goAccount}
+              onError={googleError}
+              onFallback={google}
+            />
+            <button type="button" onClick={google} disabled={busy} className="mt-2 block w-full text-center text-xs text-ink-400 hover:text-brand-600">
+              Google button not working? Try another way
+            </button>
+          </div>
           <div className="my-5 flex items-center gap-3 text-xs font-medium uppercase tracking-wider text-ink-400">
             <span className="h-px flex-1 bg-ink-200 dark:bg-ink-700" /> or with email <span className="h-px flex-1 bg-ink-200 dark:bg-ink-700" />
           </div>

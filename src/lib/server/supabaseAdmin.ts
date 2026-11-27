@@ -19,3 +19,12 @@ export function isAuthorizedCron(req: Request): boolean {
   const secrets = [process.env.CRON_SECRET, process.env.SYNC_SECRET].filter(Boolean) as string[];
   return token.length > 0 && secrets.includes(token);
 }
+
+/** Resolve the signed-in user from an `Authorization: Bearer <access token>` header. */
+export async function userFromRequest(req: Request) {
+  const db = supabaseAdmin();
+  const token = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "").trim();
+  if (!db || !token) return null;
+  const { data, error } = await db.auth.getUser(token);
+  return error ? null : data.user;
+}
