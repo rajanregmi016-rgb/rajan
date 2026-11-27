@@ -107,7 +107,7 @@ export default function LoginForm({ initialMode = "signin" }: { initialMode?: Mo
       {(mode === "signin" || mode === "signup") && (
         <>
           <div className="mt-5">
-            {process.env.NEXT_PUBLIC_GOOGLE_GIS === "1" ? (
+            {process.env.NEXT_PUBLIC_GOOGLE_GIS !== "0" ? (
               <>
                 <GoogleButton
                   label={mode === "signup" ? "signup_with" : "signin_with"}
