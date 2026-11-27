@@ -4,7 +4,8 @@ import { SITE, SITE_URL } from "@/config/site";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import Analytics from "@/components/Analytics";
+import Analytics, { AdSenseHead } from "@/components/Analytics";
+import BackToTop from "@/components/BackToTop";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -37,21 +38,24 @@ export const metadata: Metadata = {
     "nepali tools", "nepali date converter", "gold price in nepal", "usd to npr",
     "emi calculator nepal", "preeti to unicode", "nepali calendar", "see gpa calculator",
   ],
-  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: SITE.locale,
     siteName: SITE.name,
-    url: "/",
   },
   twitter: {
     card: "summary_large_image",
-    site: SITE.name,
   },
   robots: { index: true, follow: true },
   verification: process.env.NEXT_PUBLIC_GSC_TOKEN
     ? { google: process.env.NEXT_PUBLIC_GSC_TOKEN }
     : undefined,
+  other: process.env.NEXT_PUBLIC_ADSENSE_CLIENT
+    ? { "google-adsense-account": process.env.NEXT_PUBLIC_ADSENSE_CLIENT }
+    : undefined,
+  formatDetection: { telephone: false },
+  applicationName: SITE.name,
+  category: "utilities",
 };
 
 export const viewport: Viewport = {
@@ -63,9 +67,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const themeScript = `(function(){try{var t=localStorage.getItem('nt-theme');if(t==='dark'||(window.matchMedia('(prefers-color-scheme: dark)').matches&&t!=='light'))document.documentElement.classList.add('dark');}catch(e){}})();`;
   return (
-    <html lang="en" dir="ltr" suppressHydrationWarning>
+    <html lang="en" dir="ltr" className="scroll-pt-20" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <AdSenseHead />
       </head>
       <body className={`${inter.variable} ${display.variable} ${mukta.variable} font-sans`}>
         <a
@@ -77,6 +82,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main id="main">{children}</main>
         <Footer />
+        <BackToTop />
         <Analytics />
       </body>
     </html>

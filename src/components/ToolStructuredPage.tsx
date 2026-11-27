@@ -1,10 +1,11 @@
 import type { Tool } from "@/lib/tools";
+import { AdSlot } from "@/components/Analytics";
 
 /** SEO content section renderer — original tool page body. */
 export default function ToolStructuredPage({ tool }: { tool: Tool }) {
   return (
     <div className="prose-np max-w-none">
-      <section aria-labelledby="about-h" className="mt-10 max-w-none">
+      <section aria-labelledby="about-h" className="mt-10 scroll-mt-24 max-w-none">
         <h2 id="about-h" className="text-xl font-bold text-ink-900 dark:text-ink-50">
           About {tool.shortTitle}
         </h2>
@@ -13,7 +14,7 @@ export default function ToolStructuredPage({ tool }: { tool: Tool }) {
         ))}
       </section>
 
-      <section aria-labelledby="steps-h" className="mt-8 max-w-none">
+      <section aria-labelledby="steps-h" className="mt-10 scroll-mt-24 max-w-none">
         <h2 id="steps-h" className="text-xl font-bold text-ink-900 dark:text-ink-50">
           How to use — step by step
         </h2>
@@ -28,7 +29,7 @@ export default function ToolStructuredPage({ tool }: { tool: Tool }) {
       </section>
 
       {tool.content.examples?.map((ex, i) => (
-        <section key={i} aria-label={ex.heading} className="mt-8 max-w-none">
+        <section key={i} id={`example-${i}`} aria-label={ex.heading} className="mt-10 max-w-none scroll-mt-24">
           <h2 className="text-xl font-bold text-ink-900 dark:text-ink-50">{ex.heading}</h2>
           <div className="card mt-4 overflow-x-auto">
             <table className="w-full min-w-[420px] text-sm">
@@ -48,7 +49,9 @@ export default function ToolStructuredPage({ tool }: { tool: Tool }) {
         </section>
       ))}
 
-      <section aria-labelledby="faq-h" className="mt-10 max-w-none">
+      <AdSlot slot="content" />
+
+      <section aria-labelledby="faq-h" className="mt-10 scroll-mt-24 max-w-none">
         <h2 id="faq-h" className="text-xl font-bold text-ink-900 dark:text-ink-50">
           Frequently asked questions
         </h2>

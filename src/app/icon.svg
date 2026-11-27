@@ -1,4 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#C8102E"/>
-  <text x="32" y="44" font-family="'Noto Sans Devanagari', 'Segoe UI', sans-serif" font-size="34" font-weight="700" fill="#ffffff" text-anchor="middle">ने</text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#bd1e3b"/><circle cx="28" cy="13" r="4" fill="#fff" opacity="0.9"/><path d="M5 31 L15 17 L20 23 L25 16 L35 31 Z" fill="#fff"/></svg>

@@ -55,7 +55,7 @@ export default function CategoryPage({ params }: Params) {
       </header>
       <div className="container-np py-10">
         <ToolGrid tools={tools} className="lg:grid-cols-3" />
-        <AdSlot slot="category-bottom" />
+        <AdSlot slot="content" />
         <div className="prose-np mt-8 max-w-2xl">
           <p>
             All {tools.length} {cat.name.toLowerCase()} tools run in your browser, work in English and नेपाली, and are updated

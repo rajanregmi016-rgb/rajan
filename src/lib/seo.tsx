@@ -12,7 +12,7 @@ export function orgJsonLd() {
         name: SITE.name,
         alternateName: SITE.nameNp,
         url: absoluteUrl("/"),
-        logo: absoluteUrl("/favicon.ico"),
+        logo: absoluteUrl("/logo.png"),
         email: SITE.email,
       },
       {
@@ -26,7 +26,7 @@ export function orgJsonLd() {
         publisher: { "@id": absoluteUrl("/#organization") },
         potentialAction: {
           "@type": "SearchAction",
-          target: { "@type": "EntryPoint", urlTemplate: absoluteUrl("/?q={search_term_string}") },
+          target: { "@type": "EntryPoint", urlTemplate: absoluteUrl("/tools?q={search_term_string}") },
           "query-input": "required name=search_term_string",
         },
       },

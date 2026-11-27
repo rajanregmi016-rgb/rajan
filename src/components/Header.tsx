@@ -87,6 +87,12 @@ export function GlobalSearch({ compact }: { compact?: boolean }) {
           className={`${compact ? "h-10 pl-10 pr-4 !text-sm" : "h-14 border-ink-300 bg-white pl-14 pr-6 !text-base shadow-lift sm:h-16 sm:!text-lg dark:bg-ink-900"} input rounded-2xl`}
         />
       </div>
+      {open && q.trim().length > 1 && results.length === 0 && (
+        <div className="absolute z-40 mt-2 w-full rounded-2xl border border-ink-200 bg-white p-4 text-left text-sm text-ink-600 shadow-tool dark:border-ink-800 dark:bg-ink-900 dark:text-ink-300">
+          No tool found for “{q}”.{" "}
+          <Link href="/tools" className="font-semibold text-brand-700 underline dark:text-brand-300">Browse all tools</Link>
+        </div>
+      )}
       {open && results.length > 0 && (
         <div className="absolute z-40 mt-2 w-full overflow-hidden rounded-2xl border border-ink-200 bg-white p-1.5 text-left shadow-tool dark:border-ink-800 dark:bg-ink-900" role="listbox">
           {results.map((t, idx) => (
@@ -130,7 +136,7 @@ export default function Header() {
         <Link href="/" className="shrink-0" aria-label="Nepali Tools home">
           <Logo />
         </Link>
-        <nav className="ml-4 hidden items-center gap-0.5 lg:flex" aria-label="Categories">
+        <nav className="ml-4 hidden items-center gap-0.5 xl:flex" aria-label="Categories">
           {NAV.map((n) => {
             const active = pathname === n.href || pathname.startsWith(n.href + "/");
             return (
@@ -151,9 +157,10 @@ export default function Header() {
               <GlobalSearch compact />
             </div>
           )}
+          <Link href="/tools" className="btn-primary hidden !py-2 sm:inline-flex">All tools</Link>
           <ThemeToggle />
           <button
-            className="btn-ghost !px-2.5 lg:hidden"
+            className="btn-ghost !px-2.5 xl:hidden"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((v) => !v)}
@@ -163,9 +170,10 @@ export default function Header() {
         </div>
       </div>
       {menuOpen && (
-        <div className="max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-ink-200 bg-paper lg:hidden dark:border-ink-800 dark:bg-ink-950">
+        <div className="max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-ink-200 bg-paper xl:hidden dark:border-ink-800 dark:bg-ink-950">
           <div className="container-np space-y-4 py-4">
             <GlobalSearch compact />
+            <Link href="/tools" onClick={() => setMenuOpen(false)} className="btn-primary w-full">See all tools</Link>
             <nav aria-label="All categories">
               <ul className="grid gap-1.5 sm:grid-cols-2">
                 {allCategories().map((c) => {

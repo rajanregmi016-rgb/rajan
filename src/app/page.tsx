@@ -148,9 +148,14 @@ export default function HomePage() {
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {popular.slice(0, 9).map((t) => <ToolCard key={t.slug} tool={t} />)}
           </div>
+          <div className="mt-6 text-center">
+            <Link href="/tools" className="btn-ghost">
+              See all {tools.length} tools <ArrowRight className="h-4 w-4" aria-hidden />
+            </Link>
+          </div>
         </section>
 
-        <AdSlot slot="top-mid" />
+        <AdSlot slot="home" />
 
         {/* Trust band */}
         <section aria-labelledby="trust-h" className="mt-12 overflow-hidden rounded-3xl bg-navy-900 text-white">

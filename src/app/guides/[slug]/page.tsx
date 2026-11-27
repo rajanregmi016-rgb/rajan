@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import { AdSlot } from "@/components/Analytics";
 import { GUIDES_LIST } from "@/data/guides";
 import { absoluteUrl } from "@/config/site";
 
@@ -19,24 +20,40 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     title: g.title,
     description: g.description,
     alternates: { canonical: absoluteUrl(`/guides/${g.slug}`) },
+    openGraph: { type: "article", title: g.title, description: g.description, url: absoluteUrl(`/guides/${g.slug}`), modifiedTime: g.updated, images: [absoluteUrl("/opengraph-image")] },
   };
 }
 
-const ARTICLE_SCHEMA = (slug: string, title: string, updated: string) => ({
-  "@context": "https://schema.org",
-  "@type": "Article",
-  headline: title,
-  dateModified: updated,
-  author: { "@type": "Organization", name: "Nepali Tools" },
-  mainEntityOfPage: absoluteUrl(`/guides/${slug}`),
-});
+const ARTICLE_SCHEMA = (slug: string, title: string, description: string, updated: string) => [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description,
+    dateModified: updated,
+    datePublished: updated,
+    image: absoluteUrl("/opengraph-image"),
+    author: { "@type": "Organization", name: "Nepali Tools", url: absoluteUrl("/") },
+    publisher: { "@type": "Organization", name: "Nepali Tools", logo: { "@type": "ImageObject", url: absoluteUrl("/logo.png") } },
+    mainEntityOfPage: absoluteUrl(`/guides/${slug}`),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+      { "@type": "ListItem", position: 2, name: "Guides", item: absoluteUrl("/guides") },
+      { "@type": "ListItem", position: 3, name: title, item: absoluteUrl(`/guides/${slug}`) },
+    ],
+  },
+];
 
 export default function GuidePage({ params }: Params) {
   const g = GUIDES_LIST.find((x) => x.slug === params.slug);
   if (!g) notFound();
   return (
     <article>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_SCHEMA(g.slug, g.title, g.updated)) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_SCHEMA(g.slug, g.title, g.description, g.updated)) }} />
       <header className="border-b border-ink-200/80 bg-gradient-to-b from-navy-50 to-paper dark:border-ink-800 dark:from-ink-900 dark:to-ink-950">
         <div className="container-np pb-10 pt-6">
           <Breadcrumbs items={[{ name: "Home", path: "/" }, { name: "Guides", path: "/guides" }, { name: g.title, path: `/guides/${g.slug}` }]} />
@@ -48,6 +65,7 @@ export default function GuidePage({ params }: Params) {
       </header>
       <div className="container-np py-10">
         <div className="prose-np max-w-3xl" dangerouslySetInnerHTML={{ __html: g.html }} />
+        <div className="max-w-3xl"><AdSlot slot="content" /></div>
         {g.related && (
           <nav className="mt-10 max-w-3xl rounded-2xl border border-ink-200 bg-white p-5 dark:border-ink-800 dark:bg-ink-900" aria-label="Related">
             <h2 className="text-sm font-bold uppercase tracking-wide text-ink-500">Tools for this guide</h2>

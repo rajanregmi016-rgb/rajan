@@ -6,11 +6,11 @@ import { SITE_URL } from "@/config/site";
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticPages = ["", "/guides", "/about", "/contact", "/privacy", "/disclaimer"].map((p) => ({
+  const staticPages = ["", "/tools", "/guides", "/about", "/contact", "/privacy", "/terms", "/disclaimer"].map((p) => ({
     url: `${SITE_URL}${p}`,
     lastModified: new Date(),
-    changeFrequency: p === "" ? ("daily" as const) : ("monthly" as const),
-    priority: p === "" ? 1 : 0.5,
+    changeFrequency: p === "" ? ("daily" as const) : p === "/tools" ? ("weekly" as const) : ("monthly" as const),
+    priority: p === "" ? 1 : p === "/tools" ? 0.8 : 0.5,
   }));
 
   const toolPages = allTools().map((t) => ({

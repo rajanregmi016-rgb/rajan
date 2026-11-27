@@ -1,5 +1,1 @@
-# ads.txt — Authorized Digital Sellers
-# Replace the placeholder below with your Google AdSense publisher ID
-# (ca-pub-XXXXXXXXXXXXXXXX) AFTER AdSense approval, then deploy.
-# Format: adsense.example.com replaced by google.com entry:
-# google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0
+google.com, pub-1472441785224994, DIRECT, f08c47fec0942fa0

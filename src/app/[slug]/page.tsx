@@ -73,7 +73,7 @@ export default async function ToolPage({ params }: Params) {
       <JsonLd data={[toolJsonLd(tool), faqJsonLd(tool), breadcrumbJsonLd(crumbs)]} />
 
       <header className={`border-b border-ink-200/80 bg-gradient-to-b ${meta.band} to-paper dark:border-ink-800 dark:from-ink-900 dark:to-ink-950`}>
-        <div className="container-np pb-8 pt-6 sm:pb-10">
+        <div className="container-np pb-6 pt-5 sm:pb-10 sm:pt-6">
           <Breadcrumbs items={crumbs} />
           <div className="flex items-start gap-4">
             <span className={`hidden h-14 w-14 shrink-0 place-items-center rounded-2xl ring-1 ring-black/5 sm:grid ${meta.tile}`}>
@@ -86,7 +86,7 @@ export default async function ToolPage({ params }: Params) {
               <p className="devanagari mt-1.5 text-lg font-semibold text-brand-700 dark:text-brand-300" lang="ne">
                 {tool.h1Np}
               </p>
-              <p className="mt-3 max-w-2xl text-[15px] leading-6 text-ink-600 dark:text-ink-400">
+              <p className="mt-3 hidden max-w-2xl text-[15px] leading-6 text-ink-600 sm:block dark:text-ink-400">
                 {tool.description}
               </p>
               <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-ink-500">
@@ -102,11 +102,19 @@ export default async function ToolPage({ params }: Params) {
       <div className="container-np grid gap-10 py-8 lg:grid-cols-[minmax(0,1fr)_300px]">
         <div className="min-w-0">
           {/* The tool itself — always first in content order */}
-          <section aria-label={`${tool.shortTitle} tool`}>
+          <section id="tool" aria-label={`${tool.shortTitle} tool`} className="scroll-mt-24">
             <Comp rates={ratesWithForex} />
           </section>
 
-          <AdSlot slot="tool-after-tool" label="Advertisement" />
+          <nav aria-label="On this page" className="mt-6 flex flex-wrap gap-2">
+            <span className="self-center text-[13px] font-medium text-ink-500">On this page:</span>
+            <a href="#about-h" className="chip !py-1">About</a>
+            <a href="#steps-h" className="chip !py-1">How to use</a>
+            {tool.content.examples?.length ? <a href="#example-0" className="chip !py-1">Example</a> : null}
+            <a href="#faq-h" className="chip !py-1">FAQ</a>
+          </nav>
+
+          <AdSlot slot="tool" />
 
           <ToolStructuredPage tool={tool} />
 

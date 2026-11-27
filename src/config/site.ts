@@ -1,8 +1,8 @@
 export const SITE = {
   name: "Nepali Tools",
   nameNp: "नेपाली टुल्स",
-  domain: "nepalitools.com",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.nepalitools.com",
+  domain: "allnepalitools.com",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://allnepalitools.com",
   tagline: "Nepal's all-in-one online tools platform",
   taglineNp: "नेपालको सबै कुराको एक अनलाइन टुल्स प्लेटफर्म",
   description:
