@@ -39,7 +39,12 @@ export default function ContactForm() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!valid || state === "sending") return;
+    if (state === "sending") return;
+    if (!valid) {
+      setErr("Please write at least a short sentence (10 characters or more).");
+      setState("error");
+      return;
+    }
     setState("sending");
     setErr("");
     try {
@@ -122,7 +127,7 @@ export default function ContactForm() {
       </label>
 
       <div className="mt-6 flex flex-wrap items-center gap-4">
-        <button type="submit" className="btn-primary !px-6 !py-3" disabled={!valid || state === "sending"}>
+        <button type="submit" className="btn-primary !px-6 !py-3" disabled={state === "sending"}>
           <Send className="h-4 w-4" aria-hidden /> {state === "sending" ? "Sending…" : "Send message"}
         </button>
         <p className="text-sm text-ink-500">Goes straight to our team. We never share your email.</p>
