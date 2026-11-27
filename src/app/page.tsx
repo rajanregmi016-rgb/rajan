@@ -1,17 +1,13 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight, BadgeCheck, CalendarDays, Gem, Search, Wallet } from "lucide-react";
+import { ArrowRight, BadgeCheck, CalendarDays, Search } from "lucide-react";
 import { absoluteUrl, SITE } from "@/config/site";
 import { allCategories, allTools, toolsInCategory } from "@/lib/tools";
 import { ToolCard } from "@/components/ToolCard";
 import { GlobalSearch } from "@/components/Header";
-import { RecentlyOrFavorites } from "@/components/ThemeToggle";
 import { AdSlot } from "@/components/Analytics";
-import YourTools from "@/components/YourTools";
-import { getLiveRates } from "@/lib/server/marketData";
 import { KEYWORD_IDEAS } from "@/lib/keywords";
 import { orgJsonLd, JsonLd } from "@/lib/seo";
-import { formatNpNumber } from "@/lib/nepali";
 import { BsTodayChip } from "@/components/BsTodayChip";
 import { categoryMeta } from "@/lib/categoryMeta";
 
@@ -23,14 +19,11 @@ export const metadata: Metadata = {
 
 export const revalidate = 3600;
 
-export default async function HomePage() {
+export default function HomePage() {
   const tools = allTools();
   const cats = allCategories();
   const popular = tools.filter((t) => t.popular);
-  const rates = await getLiveRates();
   const quick = KEYWORD_IDEAS.filter((k) => k.estMonthlyVolume >= 4 && k.status === "covered" && k.toolSlug).slice(0, 4);
-  const goldDate = fmtDate(rates.gold.updated);
-  const fxDate = fmtDate(rates.forex.updated);
   
   return (
     <div>
@@ -41,7 +34,7 @@ export default async function HomePage() {
         <div className="dhaka absolute inset-0" aria-hidden />
         <div className="absolute left-1/2 top-[-12rem] h-[34rem] w-[34rem] -translate-x-1/2 rounded-full bg-brand-600/35 blur-[120px]" aria-hidden />
         <div className="absolute -right-20 bottom-0 h-72 w-72 rounded-full bg-saffron-500/20 blur-3xl" aria-hidden />
-        <div className="container-np relative pb-28 pt-12 text-center sm:pb-32 sm:pt-20">
+        <div className="container-np relative pb-14 pt-12 text-center sm:pb-20 sm:pt-20">
           <p className="mx-auto inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-[13px] font-medium text-white/85 ring-1 ring-white/15">
             <CalendarDays className="h-4 w-4 text-saffron-300" aria-hidden />
             <BsTodayChip className="devanagari" />
@@ -66,26 +59,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ───────── Today strip (overlaps hero) ───────── */}
-      <section aria-labelledby="today-h" className="container-np relative z-10 -mt-16">
-        <div className="card overflow-hidden shadow-tool">
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-ink-200/80 px-5 py-3.5 dark:border-ink-800">
-            <h2 id="today-h" className="text-[15px] font-bold">Today in Nepal <span className="devanagari ml-1 font-semibold text-ink-400" lang="ne">आजको नेपाल</span></h2>
-            <p className="text-xs text-ink-500">Gold: FENEGOSIDA, {goldDate} · Dollar: NRB, {fxDate}</p>
-          </div>
-          <div className="grid grid-cols-2 divide-ink-200/80 md:grid-cols-4 md:divide-x dark:divide-ink-800">
-            <Stat href="/gold-price-in-nepal" icon={<Gem className="h-5 w-5" />} tone="bg-gradient-to-br from-saffron-300 to-saffron-600" label="Fine gold / tola" value={`रु ${formatNpNumber(rates.gold.fineTola)}`} />
-            <Stat href="/gold-price-in-nepal" icon={<Gem className="h-5 w-5" />} tone="bg-gradient-to-br from-ink-300 to-ink-600" label="Silver / tola" value={`रु ${formatNpNumber(rates.gold.silverTola)}`} />
-            <Stat href="/usd-to-npr" icon={<Wallet className="h-5 w-5" />} tone="bg-gradient-to-br from-emerald-400 to-teal-600" label="1 US dollar" value={`रु ${rates.forex.fallbackUsdNpr.toFixed(2)}`} />
-            <Stat href="/nepali-calendar" icon={<CalendarDays className="h-5 w-5" />} tone="bg-gradient-to-br from-brand-500 to-brand-700" label="Nepali calendar" value="Open patro" />
-          </div>
-        </div>
-      </section>
-
       <div className="container-np py-14 sm:py-16">
-        <RecentlyOrFavorites className="mb-12" />
-
-        <YourTools />
         {/* ───────── Topics ───────── */}
         <section aria-labelledby="cat-h">
           <SectionHead id="cat-h" title="Choose a topic" titleNp="विषय छान्नुहोस्" />
@@ -139,11 +113,6 @@ export default async function HomePage() {
   );
 }
 
-function fmtDate(iso: string) {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Kathmandu" });
-}
 
 function SectionHead({ id, eyebrow, title, titleNp, href, hrefLabel }: { id: string; eyebrow?: string; title: string; titleNp?: string; href?: string; hrefLabel?: string }) {
   return (
@@ -164,14 +133,3 @@ function SectionHead({ id, eyebrow, title, titleNp, href, hrefLabel }: { id: str
   );
 }
 
-function Stat({ href, icon, tone, label, value }: { href: string; icon: React.ReactNode; tone: string; label: string; value: string }) {
-  return (
-    <Link href={href} className="group flex items-center gap-3 border-b border-ink-200/80 p-4 transition hover:bg-ink-50 sm:p-5 md:border-b-0 dark:border-ink-800 dark:hover:bg-ink-800/40 [&:nth-child(odd)]:border-r md:[&:nth-child(odd)]:border-r-0">
-      <span className={`hidden h-11 w-11 shrink-0 place-items-center rounded-2xl text-white sm:grid ${tone}`} aria-hidden>{icon}</span>
-      <span className="min-w-0">
-        <span className="block text-xs font-medium text-ink-500">{label}</span>
-        <span className="tnum block truncate font-display text-lg font-bold text-ink-900 group-hover:text-brand-700 sm:text-xl dark:text-white">{value}</span>
-      </span>
-    </Link>
-  );
-}
