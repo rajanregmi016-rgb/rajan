@@ -6,6 +6,9 @@ import {
   GOLD_TOOLS, MATH_EDU_TOOLS, SEE_TOOLS, LANGUAGE_TOOLS, EVERYDAY_TOOLS,
 } from "@/data/tools/content-b";
 import { EXTRA_TOOLS } from "@/data/tools/extra";
+import { BATCH_DATE_TOOLS } from "@/data/tools/batch-dates";
+import { BATCH_MONEY_TOOLS } from "@/data/tools/batch-money";
+import { BATCH_HOME_TOOLS } from "@/data/tools/batch-home";
 
 export { CATEGORIES };
 
@@ -21,6 +24,9 @@ function buildTools(): Tool[] {
     ...LANGUAGE_TOOLS,
     ...EVERYDAY_TOOLS,
     ...EXTRA_TOOLS,
+    ...BATCH_DATE_TOOLS,
+    ...BATCH_MONEY_TOOLS,
+    ...BATCH_HOME_TOOLS,
   ];
   const seen = new Set<string>();
   return groups.filter((t) => {

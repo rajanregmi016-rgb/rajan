@@ -15,12 +15,13 @@ import {
   SipTool, FdTool, SimpleInterestTool, DiscountTool, LakhCroreTool,
   TolaTool, WordCountTool, BillSplitTool, FuelCostTool, NebGpaTool, CurrencyTool,
 } from "@/components/tools/extraTools";
+import FormulaTool from "@/components/tools/formulaTools";
 import type { RatesData } from "@/lib/rates";
 import type { ToolComponentKey } from "@/lib/tools";
 
 export type ToolProps = { rates: RatesData };
 
-export const TOOL_COMPONENTS: Record<ToolComponentKey, React.ComponentType<ToolProps>> = {
+export const TOOL_COMPONENTS: Record<string, React.ComponentType<ToolProps>> = {
   bs2ad: Bs2AdTool,
   ad2bs: Ad2BsTool,
   calendar: CalendarTool,
@@ -53,3 +54,14 @@ export const TOOL_COMPONENTS: Record<ToolComponentKey, React.ComponentType<ToolP
   nebGpa: NebGpaTool,
   currency: CurrencyTool,
 };
+
+/** Resolve a tool's component; "f:<id>" keys render the shared calculator engine. */
+export function getToolComponent(key: ToolComponentKey): React.ComponentType<ToolProps> {
+  if (key.startsWith("f:")) {
+    const id = key.slice(2);
+    const Formula = ({ rates }: ToolProps) => <FormulaTool id={id} rates={rates} />;
+    Formula.displayName = `Formula(${id})`;
+    return Formula;
+  }
+  return TOOL_COMPONENTS[key];
+}

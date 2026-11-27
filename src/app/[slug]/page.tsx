@@ -10,7 +10,7 @@ import { ChevronRight } from "lucide-react";
 import { getForex } from "@/lib/rates";
 import ShareTool from "@/components/ShareTool";
 import { getLiveRates } from "@/lib/server/marketData";
-import { TOOL_COMPONENTS } from "@/components/tools/toolComponents";
+import { getToolComponent } from "@/components/tools/toolComponents";
 import { faqJsonLd, JsonLd, breadcrumbJsonLd, toolJsonLd } from "@/lib/seo";
 import { absoluteUrl } from "@/config/site";
 import ToolStructuredPage from "@/components/ToolStructuredPage";
@@ -57,7 +57,7 @@ export default async function ToolPage({ params }: Params) {
   const forex = rates.live.forex ? null : await getForex();
   const ratesWithForex = forex ? { ...rates, forex: { ...rates.forex, fallbackUsdNpr: forex.usdNpr } } : rates;
 
-  const Comp = TOOL_COMPONENTS[tool.componentKey];
+  const Comp = getToolComponent(tool.componentKey);
 
   const crumbs = [
     { name: "Home", path: "/" },

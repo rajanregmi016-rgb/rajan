@@ -15,7 +15,8 @@ export type ToolComponentKey =
   | "preeti" | "typing" | "numWords" | "land" | "time"
   | "sip" | "fd" | "simpleInterest" | "discount" | "lakhCrore"
   | "tola" | "wordCount" | "billSplit" | "fuelCost" | "nebGpa"
-  | "currency";
+  | "currency"
+  | `f:${string}`;
 
 export interface Tool {
   slug: string;
