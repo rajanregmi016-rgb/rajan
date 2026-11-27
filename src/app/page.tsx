@@ -7,7 +7,7 @@ import { ToolCard } from "@/components/ToolCard";
 import { GlobalSearch } from "@/components/Header";
 import { RecentlyOrFavorites } from "@/components/ThemeToggle";
 import { AdSlot } from "@/components/Analytics";
-import { getRates } from "@/lib/rates";
+import { getLiveRates } from "@/lib/server/marketData";
 import { KEYWORD_IDEAS } from "@/lib/keywords";
 import { orgJsonLd, JsonLd } from "@/lib/seo";
 import { formatNpNumber } from "@/lib/nepali";
@@ -20,11 +20,13 @@ export const metadata: Metadata = {
   alternates: { canonical: absoluteUrl("/") },
 };
 
-export default function HomePage() {
+export const revalidate = 3600;
+
+export default async function HomePage() {
   const tools = allTools();
   const cats = allCategories();
   const popular = tools.filter((t) => t.popular);
-  const rates = getRates();
+  const rates = await getLiveRates();
   const quick = KEYWORD_IDEAS.filter((k) => k.estMonthlyVolume >= 4 && k.status === "covered" && k.toolSlug).slice(0, 4);
   const goldDate = fmtDate(rates.gold.updated);
   const fxDate = fmtDate(rates.forex.updated);

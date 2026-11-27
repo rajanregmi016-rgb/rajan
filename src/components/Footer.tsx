@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { SITE, SITE_URL } from "@/config/site";
 import { Logo } from "@/components/Logo";
+import NewsletterSignup from "@/components/NewsletterSignup";
 
 const COLUMNS: Array<{ heading: string; links: Array<{ href: string; label: string }> }> = [
   {
@@ -59,13 +60,14 @@ export default function Footer() {
         <div className="flex flex-col items-start justify-between gap-6 border-b border-white/10 py-12 md:flex-row md:items-center">
           <div>
             <p className="font-display text-2xl font-extrabold sm:text-3xl">
-              Need a tool we don&apos;t have yet?
+              Today&apos;s gold &amp; dollar rate, every morning
             </p>
-            <p className="devanagari mt-1 text-white/60" lang="ne">भन्नुहोस्, हामी बनाउँछौं।</p>
+            <p className="devanagari mt-1 text-white/60" lang="ne">हरेक बिहान आजको सुन र विदेशी मुद्रा दर, तपाईंको इमेलमा।</p>
+            <Link href="/contact" className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-saffron-300 hover:text-saffron-200">
+              Need a tool we don&apos;t have? Suggest it <ArrowRight className="h-4 w-4" aria-hidden />
+            </Link>
           </div>
-          <Link href="/contact" className="btn-primary !px-6 !py-3">
-            Suggest a tool <ArrowRight className="h-4 w-4" aria-hidden />
-          </Link>
+          <NewsletterSignup source="footer" />
         </div>
 
         <div className="grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr_0.8fr]">

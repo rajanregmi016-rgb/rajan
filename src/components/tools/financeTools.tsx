@@ -233,7 +233,9 @@ export function UsdNprTool({ rates }: { rates: RatesData }) {
   const [live, setLive] = useState<number>(fallback);
   const [err, setErr] = useState(false);
 
+  const official = !!rates.live?.forex;
   useEffect(() => {
+    if (official) return;
     let cancelled = false;
     fetch("https://open.er-api.com/v6/latest/USD")
       .then((r) => (r.ok ? r.json() : Promise.reject()))
@@ -242,7 +244,7 @@ export function UsdNprTool({ rates }: { rates: RatesData }) {
       })
       .catch(() => { if (!cancelled) setErr(true); });
     return () => { cancelled = true; };
-  }, []);
+  }, [official]);
   void liveRates;
 
   const n = Number(amount);
@@ -277,7 +279,7 @@ export function UsdNprTool({ rates }: { rates: RatesData }) {
         ))}
       </div>
       <p className="mt-3 text-xs text-ink-400">
-        {err || !live ? `Reference rate Rs ${groupAsian(fallback)} per USD.` : `Live indicative rate RS ${groupAsian(live)} per USD. Official transactions use NRB's daily rate.`}
+        {official ? `Nepal Rastra Bank official rate for ${rates.forex.updated}: Rs ${groupAsian(fallback)} per USD (midpoint of buy and sell). Updated automatically every hour.` : err || !live ? `Reference rate Rs ${groupAsian(fallback)} per USD.` : `Live indicative rate RS ${groupAsian(live)} per USD. Official transactions use NRB's daily rate.`}
       </p>
     </ToolShell>
   );

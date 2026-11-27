@@ -4,6 +4,7 @@ import path from "node:path";
 export type Slab = { upto: number; rate: number };
 
 export type RatesData = {
+  live?: { gold: boolean; forex: boolean };
   gold: {
     fineTola: number;
     tejabiTola: number;

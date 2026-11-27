@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Analytics, { AdSenseHead } from "@/components/Analytics";
 import BackToTop from "@/components/BackToTop";
+import AuthProvider from "@/components/AuthProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -79,9 +80,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
-        <Header />
-        <main id="main">{children}</main>
-        <Footer />
+        <AuthProvider>
+          <Header />
+          <main id="main">{children}</main>
+          <Footer />
+        </AuthProvider>
         <BackToTop />
         <Analytics />
       </body>

@@ -7,7 +7,8 @@ import { AdSlot } from "@/components/Analytics";
 import { getTool, getCategory, allTools, toolsInCategory } from "@/lib/tools";
 import { categoryMeta } from "@/lib/categoryMeta";
 import { ChevronRight } from "lucide-react";
-import { getRates, getForex } from "@/lib/rates";
+import { getForex } from "@/lib/rates";
+import { getLiveRates } from "@/lib/server/marketData";
 import { TOOL_COMPONENTS } from "@/components/tools/toolComponents";
 import { faqJsonLd, JsonLd, breadcrumbJsonLd, toolJsonLd } from "@/lib/seo";
 import { absoluteUrl } from "@/config/site";
@@ -42,18 +43,18 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   };
 }
 
+export const revalidate = 3600;
+
 export default async function ToolPage({ params }: Params) {
   const tool = getTool(params.slug);
   if (!tool) notFound();
   const category = getCategory(tool.category)!;
 
   // Data loads (server side, cached)
-  const rates = getRates();
-  const forex = await getForex();
-  const ratesWithForex = {
-    ...rates,
-    forex: { ...rates.forex, fallbackUsdNpr: forex.usdNpr },
-  };
+  const rates = await getLiveRates();
+  // NRB official rate wins; the indicative feed is only used when no NRB snapshot exists.
+  const forex = rates.live.forex ? null : await getForex();
+  const ratesWithForex = forex ? { ...rates, forex: { ...rates.forex, fallbackUsdNpr: forex.usdNpr } } : rates;
 
   const Comp = TOOL_COMPONENTS[tool.componentKey];
 

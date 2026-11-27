@@ -9,6 +9,7 @@ import type { Tool } from "@/lib/tools";
 import { categoryMeta } from "@/lib/categoryMeta";
 import { Logo } from "@/components/Logo";
 import ThemeToggle from "@/components/ThemeToggle";
+import AccountButton from "@/components/AccountButton";
 import { RecentTools } from "@/lib/userTools";
 
 const NAV = [
@@ -168,6 +169,7 @@ export default function Header() {
             </div>
           )}
           <ThemeToggle onDark />
+          <AccountButton />
           <button
             className="grid h-10 w-10 place-items-center rounded-full border border-white/15 text-white hover:bg-white/10 lg:hidden"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
