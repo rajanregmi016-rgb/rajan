@@ -7,9 +7,11 @@ import { History, KeyRound, Loader2, LogOut, Star } from "lucide-react";
 import { useAuth } from "@/components/AuthProvider";
 import { supabase } from "@/lib/supabaseClient";
 import { FAVS_EVENT, RecentTools } from "@/lib/userTools";
+import { BillReminders, MyWallet, SavingsGoals, TodayPanel, type DashRates } from "./Dashboard";
 import { DailyEmailToggle, MyDates, NotificationSettings, PriceAlerts, ProfileName, SecurityPanel, useWelcomeEmail } from "./AccountExtras";
 
-export default function AccountView({ gold, usd }: { gold: number; usd: number }) {
+export default function AccountView({ rates }: { rates: DashRates }) {
+  const gold = rates.gold, usd = rates.usd;
   const { user, ready, enabled } = useAuth();
   const router = useRouter();
   const [favs, setFavs] = useState<string[]>([]);
@@ -71,8 +73,13 @@ export default function AccountView({ gold, usd }: { gold: number; usd: number }
     );
 
   return (
+    <div className="space-y-6">
+    <TodayPanel user={user} rates={rates} />
     <div className="grid gap-6 lg:grid-cols-[1fr_360px] lg:items-start">
       <div className="space-y-6">
+        <BillReminders user={user} />
+        <MyWallet user={user} rates={rates} />
+        <SavingsGoals user={user} />
         <section className="card p-6">
           <h2 className="flex items-center gap-2 text-lg font-extrabold"><Star className="h-5 w-5 text-saffron-500" aria-hidden /> Saved tools</h2>
           {list(favs, "Tap the star on any tool page to save it here. Your saved tools follow you to every device you sign in on.")}
@@ -114,6 +121,7 @@ export default function AccountView({ gold, usd }: { gold: number; usd: number }
           </section>
         )}
       </aside>
+    </div>
     </div>
   );
 }

@@ -222,3 +222,20 @@ export function digestFor(to: string, token: string, d: ReturnType<typeof dailyD
   const unsubscribeUrl = `${SITE_URL}/api/newsletter/unsubscribe?token=${encodeURIComponent(token)}`;
   return { to, subject: d.subject, html: shell(d.inner, unsubscribeUrl), text: `${d.text}\n\nUnsubscribe: ${unsubscribeUrl}`, unsubscribeUrl };
 }
+
+export type Bill = { id: string; label: string; d: number; amount?: number; lastFor?: string };
+
+export function billEmail(to: string, b: Bill, dueLabel: string, daysLeft: number): OutEmail {
+  const when = daysLeft <= 0 ? "today" : "tomorrow";
+  const amt = b.amount ? ` (Rs ${groupAsian(b.amount)})` : "";
+  const inner = `<p style="font-size:13px;color:#e0123f;font-weight:600;margin:0">Payment reminder</p>
+<h1 style="font-size:22px;margin:2px 0 12px">${esc(b.label)}${esc(amt)} is due ${when}</h1>
+<p style="line-height:1.6;margin:0 0 12px">Due date: <b>${esc(dueLabel)}</b>. You asked us to remind you every month on this day.</p>
+<p style="font-size:12px;color:#6b6985">Change or delete reminders on <a href="${SITE_URL}/account" style="color:#e0123f">your account page</a>.</p>`;
+  return {
+    to,
+    subject: `Reminder: ${b.label}${amt} due ${when}`,
+    html: shell(inner),
+    text: `${b.label}${amt} is due ${when} (${dueLabel}). Manage reminders: ${SITE_URL}/account`,
+  };
+}

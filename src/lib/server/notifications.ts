@@ -5,7 +5,7 @@ import { supabaseAdmin } from "@/lib/server/supabaseAdmin";
  * Per-user notification inbox, stored as one small JSON file per user in a
  * private Supabase Storage bucket (no extra database table needed).
  */
-export type Notice = { id: string; at: string; kind: "login" | "alert" | "welcome" | "news" | "account"; title: string; body: string; href?: string; read?: boolean };
+export type Notice = { id: string; at: string; kind: "login" | "alert" | "welcome" | "news" | "account" | "reminder"; title: string; body: string; href?: string; read?: boolean };
 
 const BUCKET = "user-data";
 const MAX = 40;

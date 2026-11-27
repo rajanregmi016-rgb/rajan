@@ -3,6 +3,7 @@ import { revalidateTag } from "next/cache";
 import { isAuthorizedCron } from "@/lib/server/supabaseAdmin";
 import { runSync } from "@/lib/server/marketData";
 import { runPriceAlerts } from "@/lib/server/alerts";
+import { runBillReminders } from "@/lib/server/reminders";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -16,6 +17,8 @@ async function handle(req: Request) {
   revalidateTag("market");
   const alerts = result.ok ? await runPriceAlerts(result.snapshot).catch((e) => ({ error: String(e) })) : null;
   console.log("[alerts]", JSON.stringify(alerts));
+  const reminders = await runBillReminders().catch((e) => ({ error: String(e) }));
+  console.log("[reminders]", JSON.stringify(reminders));
   return NextResponse.json({ ok: result.ok, stored: result.stored, events: result.events, syncedAt: result.snapshot.syncedAt, alerts }, { status: result.ok ? 200 : 502 });
 }
 

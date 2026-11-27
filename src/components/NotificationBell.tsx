@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Bell, BellRing, CheckCheck, LogIn, PartyPopper, TrendingUp, X } from "lucide-react";
+import { Bell, BellRing, CalendarClock, CheckCheck, LogIn, PartyPopper, TrendingUp, X } from "lucide-react";
 import { useAuth } from "@/components/AuthProvider";
 
 type Notice = { id: string; at: string; kind: string; title: string; body: string; href?: string; read?: boolean };
@@ -14,7 +14,7 @@ function ago(iso: string) {
   if (s < 86400) return `${Math.floor(s / 3600)} h ago`;
   return new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 }
-const ICON: Record<string, React.ComponentType<{ className?: string }>> = { login: LogIn, alert: TrendingUp, welcome: PartyPopper };
+const ICON: Record<string, React.ComponentType<{ className?: string }>> = { login: LogIn, alert: TrendingUp, welcome: PartyPopper, reminder: CalendarClock };
 
 export default function NotificationBell() {
   const { session } = useAuth();
