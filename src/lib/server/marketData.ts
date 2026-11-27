@@ -31,6 +31,15 @@ function ymd(d: Date) {
 }
 
 export async function fetchNrbForex(): Promise<MarketSnapshot["forex"]> {
+  try {
+    return await fetchNrbOnce();
+  } catch {
+    await new Promise((r) => setTimeout(r, 3000));
+    return fetchNrbOnce();
+  }
+}
+
+async function fetchNrbOnce(): Promise<MarketSnapshot["forex"]> {
   const to = new Date();
   const from = new Date(Date.now() - 7 * 864e5);
   const url = `https://www.nrb.org.np/api/forex/v1/rates?page=1&per_page=100&from=${ymd(from)}&to=${ymd(to)}`;
@@ -91,25 +100,80 @@ export function parseFenegosida(html: string): MarketSnapshot["gold"] {
   };
 }
 
+/** Map the FENEGOSIDA JSON rate list (fields: rateType, todayBaseRatePerGram) to our gold shape. */
+export function mapFenegosidaRates(list: any[]): MarketSnapshot["gold"] {
+  if (!Array.isArray(list)) return null;
+  const pick = (metal: string, unit: string) => {
+    const it = list.find((x) => typeof x?.rateType === "string" && x.rateType.includes(metal) && x.rateType.includes(unit));
+    const v = Number(String(it?.todayBaseRatePerGram ?? "").replace(/[^\d.]/g, ""));
+    return Number.isFinite(v) && v > 0 ? v : null;
+  };
+  const fineTola = pick("सुन", "तोल");
+  const fineTenGram = pick("सुन", "ग्राम");
+  const silverTola = pick("चाँदी", "तोल");
+  if (!fineTola || fineTola < 30000 || fineTola > 2000000) return null;
+  return {
+    fineTola,
+    tejabiTola: null,
+    silverTola: silverTola && silverTola > 200 && silverTola < 100000 ? silverTola : null,
+    fineTenGram: fineTenGram && fineTenGram < fineTola ? fineTenGram : null,
+    fetchedAt: new Date().toISOString(),
+  };
+}
+
+/** The site is a JS app: find its pricing API in the bundle, then call it. */
+async function fetchFenegosidaApi(html: string, origin: string): Promise<{ gold: MarketSnapshot["gold"]; diag: unknown }> {
+  const scripts = Array.from(html.matchAll(/<script[^>]+src="([^"]+)"/gi)).map((m) => new URL(m[1], origin).toString());
+  const diag: Record<string, unknown> = { scripts, tried: [] as string[] };
+  for (const src of scripts.slice(0, 3)) {
+    const js = await fetch(src, { cache: "no-store", headers: { "User-Agent": UA }, signal: AbortSignal.timeout(20000) }).then((r) => r.text()).catch(() => "");
+    if (!js) continue;
+    const i = js.indexOf("getPricing");
+    const near = i >= 0 ? js.slice(Math.max(0, i - 400), i + 600) : "";
+    diag.near = near.slice(0, 1000);
+    const urls = Array.from(new Set(Array.from(js.matchAll(/["'`](https?:\/\/[^"'`\s]+)["'`]/g)).map((m) => m[1])))
+      .filter((u) => !/reactjs|w3\.org|google|facebook|schema\.org|github/i.test(u));
+    diag.urls = urls.slice(0, 20);
+    const paths = Array.from(new Set(Array.from(near.matchAll(/["'`]([^"'`\s]*pric[^"'`\s]*)["'`]/gi)).map((m) => m[1])));
+    diag.paths = paths;
+    const bases = [...urls.filter((u) => /api/i.test(u)), ...urls, origin];
+    const cands: string[] = [];
+    for (const p of paths) {
+      if (/^https?:/i.test(p)) cands.push(p);
+      else for (const b of bases) cands.push(b.replace(/\/+$/, "") + "/" + p.replace(/^\/+/, ""));
+    }
+    for (const u of Array.from(new Set(cands)).slice(0, 8)) {
+      (diag.tried as string[]).push(u);
+      try {
+        const r = await fetch(u, { cache: "no-store", headers: { "User-Agent": UA, Accept: "application/json" }, signal: AbortSignal.timeout(15000) });
+        if (!r.ok) continue;
+        const j = await r.json();
+        const list = Array.isArray(j) ? j : Array.isArray(j?.data) ? j.data : Array.isArray(j?.result) ? j.result : Array.isArray(j?.data?.data) ? j.data.data : null;
+        const gold = mapFenegosidaRates(list || []);
+        if (gold) return { gold, diag: { ...diag, used: u } };
+        diag.lastBody = JSON.stringify(j).slice(0, 600);
+      } catch (e) {
+        diag.lastError = String(e);
+      }
+    }
+  }
+  return { gold: null, diag };
+}
+
 export async function fetchFenegosida(): Promise<MarketSnapshot["gold"]> {
-  const res = await fetch("https://www.fenegosida.org/", { cache: "no-store", headers: { "User-Agent": UA }, signal: AbortSignal.timeout(20000) });
+  const origin = "https://www.fenegosida.org";
+  const res = await fetch(origin + "/", { cache: "no-store", headers: { "User-Agent": UA }, signal: AbortSignal.timeout(20000) });
   if (!res.ok) throw new Error(`FENEGOSIDA HTTP ${res.status}`);
   const html = await res.text();
-  const gold = parseFenegosida(html);
-  if (!gold) {
-    const i = html.search(/gold/i);
-    const text = html.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/\s+/g, " ");
-    const j = text.search(/fine\s*gold/i);
-    console.log("[fenegosida-diag]", JSON.stringify({
-      len: html.length,
-      head: html.slice(0, 300),
-      rawAroundGold: i >= 0 ? html.slice(Math.max(0, i - 300), i + 1500) : null,
-      textAroundFine: j >= 0 ? text.slice(Math.max(0, j - 200), j + 1500) : null,
-      scripts: Array.from(html.matchAll(/<script[^>]+src="([^"]+)"/gi)).map((m) => m[1]).slice(0, 15),
-    }));
-    throw new Error("FENEGOSIDA page could not be parsed");
+  const fromHtml = parseFenegosida(html);
+  if (fromHtml) return fromHtml;
+  const { gold, diag } = await fetchFenegosidaApi(html, origin);
+  if (gold) {
+    console.log("[fenegosida] via API", (diag as { used?: string }).used);
+    return gold;
   }
-  return gold;
+  console.log("[fenegosida-diag]", JSON.stringify(diag).slice(0, 4000));
+  throw new Error("FENEGOSIDA rates API not found");
 }
 
 async function latestStoredSnapshot(): Promise<MarketSnapshot | null> {
