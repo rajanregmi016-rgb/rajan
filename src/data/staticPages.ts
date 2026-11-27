@@ -34,6 +34,8 @@ export const STATIC_PAGES: StaticPage[] = [
 <p>Last updated: 27 November 2026. This policy explains what data All Nepali Tools collects and why. In one sentence: <strong>our tools run in your browser and we collect almost nothing.</strong></p>
 <h2>What we collect</h2>
 <p>Tool inputs (dates, amounts, text you convert) are processed in your browser and are not sent to or stored on our servers. Favourite and recently used tools are saved in your browser's localStorage only. Like any website, our hosting provider (Vercel) may briefly log IP address and browser type for security and debugging.</p>
+<h2>Accounts and emails (optional)</h2>
+<p>You never need an account to use a tool. If you create one, we store your email address, your name if you add it, your saved tools, price alerts, saved Nepali dates and notifications, using Supabase as our database provider. When you sign in we record the time, browser type and approximate city/country (from your IP address) so we can send you a sign-in alert; you can turn these emails off. If you sign up for the daily rates email we store your email address and send it through Resend. Every email has an unsubscribe link, and you can delete your account and its data at any time from your account page.</p>
 <h2>Analytics</h2>
 <p>We use <strong>Google Analytics</strong> to count visits and see which tools are useful. It uses cookies and collects aggregate information such as pages viewed, device type and approximate country. We do not use it to identify you.</p>
 <h2>Advertising and cookies</h2>
@@ -44,7 +46,7 @@ export const STATIC_PAGES: StaticPage[] = [
 <li>Learn more in <a href="https://policies.google.com/technologies/partner-sites" rel="nofollow noopener" target="_blank">How Google uses information from sites that use its services</a>.</li>
 </ul>
 <h2>Third-party services</h2>
-<p>Exchange rates may load from a public currency API (open.er-api.com), which sees only standard web-request information. Fonts are served by Google Fonts through our own domain.</p>
+<p>We fetch official rates from Nepal Rastra Bank and FENEGOSIDA on our server; your browser does not contact them. As a backup, exchange rates may load from a public currency API (open.er-api.com), which sees only standard web-request information. Google Sign-In is provided by Google if you choose it. Fonts are served by Google Fonts through our own domain.</p>
 <h2>Children</h2>
 <p>The site is suitable for students, but we do not knowingly collect personal information from children under 13.</p>
 <h2>Your choices</h2>

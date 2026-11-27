@@ -10,6 +10,7 @@ import { categoryMeta } from "@/lib/categoryMeta";
 import { Logo } from "@/components/Logo";
 import ThemeToggle from "@/components/ThemeToggle";
 import AccountButton from "@/components/AccountButton";
+import NotificationBell from "@/components/NotificationBell";
 import { RecentTools } from "@/lib/userTools";
 
 const NAV = [
@@ -168,7 +169,8 @@ export default function Header() {
               <GlobalSearch variant="bar" />
             </div>
           )}
-          <ThemeToggle onDark />
+          <span className="hidden sm:inline-flex"><ThemeToggle onDark /></span>
+          <NotificationBell />
           <AccountButton />
           <button
             className="grid h-10 w-10 place-items-center rounded-full border border-white/15 text-white hover:bg-white/10 lg:hidden"
@@ -184,7 +186,10 @@ export default function Header() {
       {menuOpen && (
         <div className="h-[calc(100dvh-4rem)] overflow-y-auto border-t border-white/10 bg-navy-950 lg:hidden">
           <div className="container-np space-y-6 py-5">
-            <GlobalSearch variant="bar" />
+            <div className="flex items-center gap-3">
+              <div className="flex-1"><GlobalSearch variant="bar" /></div>
+              <span className="sm:hidden"><ThemeToggle onDark /></span>
+            </div>
             <section>
               <h2 className="mb-2 text-xs font-bold uppercase tracking-[0.16em] text-white/50">Topics</h2>
               <ul className="grid gap-2 sm:grid-cols-2">

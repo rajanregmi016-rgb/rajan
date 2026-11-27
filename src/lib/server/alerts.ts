@@ -1,6 +1,7 @@
 import "server-only";
 import { supabaseAdmin } from "@/lib/server/supabaseAdmin";
 import { alertEmail, resendReady, sendOne, type PriceAlert } from "@/lib/server/newsletter";
+import { addNotice, prefsOf } from "@/lib/server/notifications";
 import { usdMid, type MarketSnapshot } from "@/lib/server/marketData";
 
 /** Emails users whose gold / USD price alerts were crossed. Each alert fires at most once per 20 hours. */
@@ -27,7 +28,9 @@ export async function runPriceAlerts(snap: MarketSnapshot) {
         if (hit && !recent && current !== null) {
           const src = a.metric === "gold" ? "FENEGOSIDA" : `Nepal Rastra Bank, ${snap.forex?.date}`;
           try {
-            await sendOne(alertEmail(u.email, a, current, src));
+            const what = a.metric === "gold" ? `Fine gold is Rs ${Math.round(current).toLocaleString("en-IN")} per tola` : `1 US dollar is Rs ${current.toFixed(2)}`;
+            await addNotice(u.id, { kind: "alert", title: "Price alert", body: `${what} (${a.dir} your ${a.value}). Source: ${src}.`, href: a.metric === "gold" ? "/gold-price-in-nepal" : "/usd-to-npr" }).catch(() => null);
+            if (prefsOf(meta).alertEmail) await sendOne(alertEmail(u.email, a, current, src));
             next.push({ ...a, lastSent: new Date().toISOString() });
             changed = true;
             sent++;

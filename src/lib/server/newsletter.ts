@@ -124,6 +124,25 @@ export function accountWelcomeEmail(to: string, name: string): OutEmail {
   };
 }
 
+export function loginAlertEmail(to: string, info: { when: string; device: string; place: string; method: string }): OutEmail {
+  const row = (a: string, b: string) => `<tr><td style="padding:6px 0;color:#6b6985">${a}</td><td style="padding:6px 0;font-weight:600">${esc(b)}</td></tr>`;
+  const inner = `<p style="font-size:13px;color:#e0123f;font-weight:600;margin:0">Security</p>
+<h1 style="font-size:22px;margin:2px 0 12px">New sign-in to your account</h1>
+<p style="line-height:1.6;margin:0 0 12px">Your All Nepali Tools account was just signed in to.</p>
+<table role="presentation" style="font-size:14px;border-collapse:collapse">
+${row("When", info.when)}${row("Device", info.device)}${row("Approx. location", info.place)}${row("Signed in with", info.method)}
+</table>
+<p style="line-height:1.6;margin:16px 0 0"><b>Was this you?</b> Then you don't need to do anything.</p>
+<p style="line-height:1.6;margin:6px 0 0">If not, <a href="${SITE_URL}/account#security" style="color:#e0123f;font-weight:600">open your account</a>, choose <b>Sign out of all devices</b>, and change your password.</p>
+<p style="font-size:12px;color:#6b6985;margin-top:16px">You can turn these emails off in your account's notification settings.</p>`;
+  return {
+    to,
+    subject: `New sign-in to your ${SITE.name} account`,
+    html: shell(inner),
+    text: `New sign-in to your account\nWhen: ${info.when}\nDevice: ${info.device}\nLocation: ${info.place}\nMethod: ${info.method}\nNot you? Sign out of all devices at ${SITE_URL}/account and change your password.`,
+  };
+}
+
 export type PriceAlert = { id: string; metric: "gold" | "usd"; dir: "above" | "below"; value: number; lastSent?: string };
 
 export function alertEmail(to: string, a: PriceAlert, current: number, source: string): OutEmail {

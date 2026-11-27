@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import NepaliDate from "nepali-date-converter";
-import { Bell, CalendarHeart, Mail, Pencil, Plus, Trash2 } from "lucide-react";
+import { Bell, CalendarHeart, LogOut, Mail, Pencil, Plus, ShieldCheck, Trash2 } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabaseClient";
 import { BS_MONTHS, BS_MONTHS_NP, toNpDigits } from "@/lib/nepali";
@@ -213,6 +213,85 @@ export function MyDates({ user }: { user: User }) {
         <input className="input" inputMode="numeric" aria-label="BS year (optional)" placeholder="Year (opt.)" value={y} onChange={(e) => setY(e.target.value)} />
         <button className="btn-primary justify-center"><Plus className="h-4 w-4" aria-hidden /> Save</button>
       </form>
+    </section>
+  );
+}
+
+/* ---------- notification settings ---------- */
+type Prefs = { loginEmail: boolean; alertEmail: boolean };
+function Switch({ on, onClick, label, disabled }: { on: boolean; onClick: () => void; label: string; disabled?: boolean }) {
+  return (
+    <button role="switch" aria-checked={on} aria-label={label} disabled={disabled} onClick={onClick}
+      className={`relative h-7 w-12 shrink-0 rounded-full transition ${on ? "bg-brand-600" : "bg-ink-300 dark:bg-ink-700"} ${disabled ? "opacity-60" : ""}`}>
+      <span className={`absolute top-0.5 h-6 w-6 rounded-full bg-white shadow transition ${on ? "left-[22px]" : "left-0.5"}`} />
+    </button>
+  );
+}
+export function NotificationSettings({ user }: { user: User }) {
+  const p = (user.user_metadata?.prefs || {}) as Partial<Prefs>;
+  const [prefs, setPrefs] = useState<Prefs>({ loginEmail: p.loginEmail !== false, alertEmail: p.alertEmail !== false });
+  async function flip(k: keyof Prefs) {
+    const next = { ...prefs, [k]: !prefs[k] };
+    setPrefs(next);
+    await supabase()?.auth.updateUser({ data: { prefs: next } });
+  }
+  const rows: Array<{ k: keyof Prefs; t: string; d: string }> = [
+    { k: "loginEmail", t: "Sign-in alerts by email", d: "Get an email each time your account is signed in to on a new device or browser." },
+    { k: "alertEmail", t: "Price alert emails", d: "Email me when one of my gold or dollar price alerts is reached. Alerts always appear in the bell too." },
+  ];
+  return (
+    <section id="notifications" className="card scroll-mt-24 p-6">
+      <h2 className="flex items-center gap-2 text-lg font-extrabold"><Bell className="h-5 w-5 text-brand-600" aria-hidden /> Notification settings</h2>
+      <ul className="mt-4 divide-y divide-ink-100 dark:divide-ink-800">
+        {rows.map((r) => (
+          <li key={r.k} className="flex items-start justify-between gap-4 py-3">
+            <span><span className="block text-sm font-semibold">{r.t}</span><span className="block text-[13px] text-ink-500">{r.d}</span></span>
+            <Switch on={prefs[r.k]} onClick={() => flip(r.k)} label={r.t} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+/* ---------- security ---------- */
+export function SecurityPanel({ user }: { user: User }) {
+  const [busy, setBusy] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [msg, setMsg] = useState("");
+  const last = user.last_sign_in_at ? new Date(user.last_sign_in_at).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" }) : null;
+  async function signOutAll() {
+    setBusy("all");
+    await supabase()?.auth.signOut({ scope: "global" });
+    window.location.href = "/login";
+  }
+  async function del() {
+    setBusy("del");
+    const j = await api("/api/account/delete", { method: "POST", body: JSON.stringify({ confirm }) });
+    if (j.ok) {
+      await supabase()?.auth.signOut({ scope: "local" });
+      window.location.href = "/?account=deleted";
+    } else {
+      setMsg(j.error || "Couldn't delete the account. Try again.");
+      setBusy("");
+    }
+  }
+  return (
+    <section id="security" className="card scroll-mt-24 p-6">
+      <h2 className="flex items-center gap-2 text-lg font-extrabold"><ShieldCheck className="h-5 w-5 text-emerald-600" aria-hidden /> Security</h2>
+      {last && <p className="mt-1 text-sm text-ink-500">Last sign-in: {last}</p>}
+      <button onClick={signOutAll} disabled={!!busy} className="btn-ghost mt-4 w-full justify-center border border-ink-200 dark:border-ink-800">
+        <LogOut className="h-4 w-4" aria-hidden /> {busy === "all" ? "Signing out…" : "Sign out of all devices"}
+      </button>
+      <details className="mt-4 text-sm">
+        <summary className="cursor-pointer font-semibold text-brand-700">Delete my account</summary>
+        <p className="mt-2 text-ink-500">This removes your account, saved tools, alerts, dates and notifications for good, and stops the daily email. Type <b>DELETE</b> to confirm.</p>
+        <div className="mt-2 flex gap-2">
+          <input className="input !h-10" value={confirm} onChange={(e) => setConfirm(e.target.value)} aria-label="Type DELETE to confirm" />
+          <button className="btn !h-10 bg-brand-700 px-4 text-white disabled:opacity-50" disabled={confirm !== "DELETE" || !!busy} onClick={del}>Delete</button>
+        </div>
+        {msg && <p className="mt-2 text-brand-700" role="alert">{msg}</p>}
+      </details>
     </section>
   );
 }

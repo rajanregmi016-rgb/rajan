@@ -7,7 +7,7 @@ import { History, KeyRound, Loader2, LogOut, Star } from "lucide-react";
 import { useAuth } from "@/components/AuthProvider";
 import { supabase } from "@/lib/supabaseClient";
 import { FAVS_EVENT, RecentTools } from "@/lib/userTools";
-import { DailyEmailToggle, MyDates, PriceAlerts, ProfileName, useWelcomeEmail } from "./AccountExtras";
+import { DailyEmailToggle, MyDates, NotificationSettings, PriceAlerts, ProfileName, SecurityPanel, useWelcomeEmail } from "./AccountExtras";
 
 export default function AccountView({ gold, usd }: { gold: number; usd: number }) {
   const { user, ready, enabled } = useAuth();
@@ -86,6 +86,8 @@ export default function AccountView({ gold, usd }: { gold: number; usd: number }
       </div>
       <aside className="space-y-6">
         <DailyEmailToggle />
+        <NotificationSettings user={user} />
+        <SecurityPanel user={user} />
         <section className="card p-6">
           <div className="flex items-center gap-3">
             <span className="grid h-12 w-12 place-items-center rounded-full bg-brand-gradient text-lg font-bold text-white">{name.charAt(0).toUpperCase()}</span>
