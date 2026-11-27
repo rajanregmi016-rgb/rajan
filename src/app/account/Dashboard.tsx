@@ -201,6 +201,13 @@ export function BillReminders({ user }: { user: User }) {
   const [amount, setAmount] = useState("");
   const sorted = useMemo(() => bills.map((b) => ({ b, n: nextDue(b.d) })).sort((a, c) => (a.n?.days ?? 99) - (c.n?.days ?? 99)), [bills]);
   const monthly = bills.reduce((a, b) => a + (b.amount || 0), 0);
+  const [testMsg, setTestMsg] = useState("");
+  async function sendTest() {
+    setTestMsg("Sending…");
+    const { data } = (await supabase()?.auth.getSession()) ?? { data: { session: null } };
+    const r = await fetch("/api/account/test-reminder", { method: "POST", headers: { Authorization: `Bearer ${data.session?.access_token ?? ""}` } }).then((x) => x.json()).catch(() => ({ ok: false }));
+    setTestMsg(r.ok ? `Sent a sample reminder to ${r.to}. Check your inbox (and Spam).` : r.error || "Couldn't send. Try again.");
+  }
   async function persist(next: Bill[]) { setBills(next); await saveMeta({ bills: next }); }
   function add(e: React.FormEvent) {
     e.preventDefault();
@@ -230,7 +237,11 @@ export function BillReminders({ user }: { user: User }) {
               </li>
             ))}
           </ul>
-          {monthly > 0 && <p className="mt-3 text-sm text-ink-600 dark:text-ink-300">Fixed payments each month: <b className="tnum">{rs(monthly)}</b></p>}
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+            {monthly > 0 ? <p className="text-sm text-ink-600 dark:text-ink-300">Fixed payments each month: <b className="tnum">{rs(monthly)}</b></p> : <span />}
+            <button type="button" onClick={sendTest} className="text-sm font-semibold text-brand-700 underline dark:text-brand-300">Email me a test reminder</button>
+          </div>
+          {testMsg && <p className="mt-2 text-sm text-ink-500" role="status">{testMsg}</p>}
         </>
       )}
       <form onSubmit={add} className="mt-4 grid gap-2 sm:grid-cols-[1.5fr_90px_1fr_auto]">
