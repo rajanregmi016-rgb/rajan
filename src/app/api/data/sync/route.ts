@@ -6,6 +6,8 @@ import { runPriceAlerts } from "@/lib/server/alerts";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
+// NRB has been unreachable from the Mumbai region at times; run this near the pages that fetch it fine.
+export const preferredRegion = "iad1";
 
 async function handle(req: Request) {
   if (!isAuthorizedCron(req)) return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });

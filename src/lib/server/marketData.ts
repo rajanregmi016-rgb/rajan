@@ -128,21 +128,25 @@ async function fetchFenegosidaApi(html: string, origin: string): Promise<{ gold:
   for (const src of scripts.slice(0, 3)) {
     const js = await fetch(src, { cache: "no-store", headers: { "User-Agent": UA }, signal: AbortSignal.timeout(20000) }).then((r) => r.text()).catch(() => "");
     if (!js) continue;
-    const i = js.indexOf("getPricing");
-    const near = i >= 0 ? js.slice(Math.max(0, i - 400), i + 600) : "";
-    diag.near = near.slice(0, 1000);
-    const urls = Array.from(new Set(Array.from(js.matchAll(/["'`](https?:\/\/[^"'`\s]+)["'`]/g)).map((m) => m[1])))
-      .filter((u) => !/reactjs|w3\.org|google|facebook|schema\.org|github/i.test(u));
-    diag.urls = urls.slice(0, 20);
-    const paths = Array.from(new Set(Array.from(near.matchAll(/["'`]([^"'`\s]*pric[^"'`\s]*)["'`]/gi)).map((m) => m[1])));
-    diag.paths = paths;
-    const bases = [...urls.filter((u) => /api/i.test(u)), ...urls, origin];
-    const cands: string[] = [];
-    for (const p of paths) {
-      if (/^https?:/i.test(p)) cands.push(p);
-      else for (const b of bases) cands.push(b.replace(/\/+$/, "") + "/" + p.replace(/^\/+/, ""));
+    const fn = js.match(/getPricing:\s*([\w$]+)/)?.[1];
+    let def = "";
+    if (fn) {
+      const esc = fn.replace(/\$/g, "\\$");
+      const m = new RegExp(`[,;{\\s]${esc}=`).exec(js);
+      if (m) def = js.slice(m.index, m.index + 400);
     }
-    for (const u of Array.from(new Set(cands)).slice(0, 8)) {
+    diag.fn = fn;
+    diag.def = def;
+    const bases = Array.from(new Set(Array.from(js.matchAll(/https?:\/\/api\.[a-z0-9.-]+(?:\/[a-z0-9/_-]*)?/gi)).map((m) => m[0].replace(/\/+$/, ""))));
+    diag.bases = bases;
+    const paths = Array.from(new Set(Array.from(def.matchAll(/["'`]([^"'`\s]{2,80})["'`]/g)).map((m) => m[1]).filter((x) => /^[\/\w-]+$/.test(x) && /[a-z]/i.test(x))));
+    diag.paths = paths;
+    const guesses = ["pricing", "api/pricing", "api/v1/pricing", "rate", "api/rate", "rates", "api/rates"];
+    const cands: string[] = [];
+    for (const b of bases.length ? bases : [origin]) {
+      for (const p of [...paths, ...guesses]) cands.push(b + "/" + p.replace(/^\/+/, ""));
+    }
+    for (const u of Array.from(new Set(cands)).slice(0, 14)) {
       (diag.tried as string[]).push(u);
       try {
         const r = await fetch(u, { cache: "no-store", headers: { "User-Agent": UA, Accept: "application/json" }, signal: AbortSignal.timeout(15000) });
@@ -172,7 +176,8 @@ export async function fetchFenegosida(): Promise<MarketSnapshot["gold"]> {
     console.log("[fenegosida] via API", (diag as { used?: string }).used);
     return gold;
   }
-  console.log("[fenegosida-diag]", JSON.stringify(diag).slice(0, 4000));
+  const d = diag as Record<string, unknown>;
+  console.log("[fenegosida-diag]", JSON.stringify({ fn: d.fn, def: d.def, bases: d.bases, paths: d.paths, lastBody: d.lastBody, lastError: d.lastError, tried: d.tried }).slice(0, 4000));
   throw new Error("FENEGOSIDA rates API not found");
 }
 
