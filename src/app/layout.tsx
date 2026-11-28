@@ -1,3 +1,4 @@
+import { ADS_CLIENT, GSC_TOKEN } from "@/lib/publicIds";
 import type { Metadata, Viewport } from "next";
 import { Inter, Mukta, Sora } from "next/font/google";
 import { SITE, SITE_URL } from "@/config/site";
@@ -50,11 +51,11 @@ export const metadata: Metadata = {
     card: "summary_large_image",
   },
   robots: { index: true, follow: true },
-  verification: process.env.NEXT_PUBLIC_GSC_TOKEN
-    ? { google: process.env.NEXT_PUBLIC_GSC_TOKEN }
+  verification: GSC_TOKEN
+    ? { google: GSC_TOKEN }
     : undefined,
-  other: process.env.NEXT_PUBLIC_ADSENSE_CLIENT
-    ? { "google-adsense-account": process.env.NEXT_PUBLIC_ADSENSE_CLIENT }
+  other: ADS_CLIENT
+    ? { "google-adsense-account": ADS_CLIENT }
     : undefined,
   formatDetection: { telephone: false },
   applicationName: SITE.name,

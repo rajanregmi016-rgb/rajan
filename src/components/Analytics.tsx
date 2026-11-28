@@ -3,8 +3,7 @@
 import Script from "next/script";
 import { useEffect, useRef } from "react";
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
-const ADS_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
+import { ADS_CLIENT, GA_ID } from "@/lib/publicIds";
 
 /**
  * Google Analytics (gtag) — loads only when NEXT_PUBLIC_GA_ID is set, so local
